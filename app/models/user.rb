@@ -12,7 +12,7 @@ class User < ApplicationRecord
 
   def create_default_categories
     DEFAULT_CATEGORIES.each do |category|
-      categories.create(name: category, user: self)
+      categories.create(name: category)
     end
   end
 end

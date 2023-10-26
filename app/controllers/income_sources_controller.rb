@@ -3,7 +3,7 @@ class IncomeSourcesController < ApplicationController
 
   # GET /income_sources
   def index
-    @income_sources = IncomeSource.all
+    @income_sources = @current_user.income_sources.all
 
     render json: @income_sources
   end
@@ -15,7 +15,7 @@ class IncomeSourcesController < ApplicationController
 
   # POST /income_sources
   def create
-    @income_source = IncomeSource.new(income_source_params)
+    @income_source = @current_user.income_sources.new(income_source_params)
 
     if @income_source.save
       render json: @income_source, status: :created, location: @income_source
@@ -41,11 +41,11 @@ class IncomeSourcesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_income_source
-      @income_source = IncomeSource.find(params[:id])
+      @income_source = @current_user.income_sources.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def income_source_params
-      params.require(:income_source).permit(:name, :last_month_income, :user_id)
+      params.require(:income_source).permit(:name, :last_month_income)
     end
 end
