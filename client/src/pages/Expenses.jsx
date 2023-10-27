@@ -4,5 +4,5 @@ const Expenses = () => {
       <h1> This is Expenses </h1>
     </>
   );
-}
+};
 export default Expenses;

@@ -1,7 +1,6 @@
 import { useClerk } from "@clerk/clerk-react";
 
 const Home = () => {
-
   const clerk = useClerk();
 
   return (
@@ -10,5 +9,5 @@ const Home = () => {
       <button onClick={() => clerk.openSignIn({})}>Sign in</button>;
     </>
   );
-}
+};
 export default Home;

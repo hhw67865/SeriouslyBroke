@@ -1,17 +1,17 @@
-import { SessionContext } from "../context/SessionContext";
-import { useContext } from "react";
-import { UserButton } from "@clerk/clerk-react";
+// import { SessionContext } from "../context/SessionContext";
+// import { useContext } from "react";
 
 const Summary = () => {
-  const session = useContext(SessionContext);
-  session.getToken().then(console.log)
-  console.log(session)
+  // const session = useContext(SessionContext);
 
   return (
     <>
-      <div>Hello {session.user.fullName?session.user.fullName:session.user.username}!</div>
-      <UserButton afterSignOutUrl={"/"} userProfileMode="modal" />
+      {/* <p className="text-red-400 font-bold">
+        Hello{" "}
+        {session.user.fullName ? session.user.fullName : session.user.username}!
+      </p>
+      <UserButton afterSignOutUrl={"/"} userProfileMode="modal" /> */}
     </>
   );
-}
+};
 export default Summary;
