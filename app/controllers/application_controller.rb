@@ -5,9 +5,9 @@ class ApplicationController < ActionController::API
 
   def authenticate_user!
     clerk = Clerk::SDK.new
-    session = clerk.sessions.find(request.headers['session_id'])
+    session = clerk.sessions.find(request.headers['session_id'])&.first
     if session && session["status"] == "active"
-      @current_user = User.create_or_find_by(clerk_user_id: session["user_id"])
+      @current_user = User.find_or_create_by(clerk_user_id: session["user_id"])
     else
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end

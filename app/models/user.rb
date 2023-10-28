@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   after_create :create_default_categories
 
+  validates :clerk_user_id, uniqueness: true
+
   DEFAULT_CATEGORIES = ["Housing", "Transportation", "Food", "Utilities", "Medical & Healthcare", "Fitness", "Debt Payments", "Personal Care", "Entertainment", "Pets", "Clothes", "Miscellaneous"]
 
   def create_default_categories

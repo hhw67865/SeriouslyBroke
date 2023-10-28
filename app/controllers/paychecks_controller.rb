@@ -46,6 +46,6 @@ class PaychecksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def paycheck_params
-      params.require(:paycheck).permit(:date, :amount, :income_source_id)
+      params.require(:paycheck).permit(:date, :amount, :income_source_id, income_source_attributes: [:name])
     end
 end

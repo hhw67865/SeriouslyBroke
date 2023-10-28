@@ -12,13 +12,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-}
 
-div {
-  border-color: black;
-}
-
-.spacer {
+  background-image: url("./assets/background.svg");
   aspect-ratio: 960/540;
   width: 100%;
   background-repeat: no-repeat;
@@ -26,6 +21,6 @@ div {
   background-size: cover;
 }
 
-.layer1 {
-  background-image: url("./assets/background.svg");
+.active {
+  color: #5F741D;
 }

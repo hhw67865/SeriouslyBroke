@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { SessionContext } from "./context/SessionContext";
 import { useSession } from "@clerk/clerk-react";
 
-import { Expenses, Home, Income, Summary } from "./pages";
+import { Expenses, Home, Income, Paycheck, Summary } from "./pages";
 import Navbar from "./layouts/Navbar";
 
 function App() {
@@ -22,11 +22,14 @@ function App() {
       ) : (
         <SessionContext.Provider value={session}>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Summary />} />
-            <Route path="/expenses" element={<Expenses />} />
-            <Route path="/income" element={<Income />} />
-          </Routes>
+          <div className="mt-40 w-full h-screen flex flex-col items-center">
+            <Routes>
+              <Route path="/" element={<Summary />} />
+              <Route path="/expenses" element={<Expenses />} />
+              <Route path="/income" element={<Income />} />
+              <Route path="/income/paycheck" element={<Paycheck/>} />
+            </Routes>
+          </div>
         </SessionContext.Provider>
       )}
     </div>
