@@ -3,9 +3,11 @@ import CreatableSelect from 'react-select/creatable';
 import fetchAxios from '../../../lib/fetchAxios';
 import { SessionContext } from '../../../context/SessionContext';
 import { useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const PaycheckForm = () => {
   const session = useContext(SessionContext);
+  const navigate = useNavigate();
 
   const [incomeSources, setIncomeSources] = useState({});
   const [formData, setFormData] = useState({
@@ -38,20 +40,14 @@ const PaycheckForm = () => {
   function handleSelectChange (e) {
     if (e?.__isNew__) {
       setFormData((prev)=> {
-        const { income_source_id , ...rest } = prev
-        return {
-          ...rest,
-          income_source_attributes: { name: e.value }
-        }
+        delete prev.income_source_id
+        return {...prev, income_source_attributes: {name: e?.value}}
       })
     }
     else {
       setFormData((prev)=> {
-        const { income_source_attributes , ...rest } = prev
-        return {
-          ...rest,
-          income_source_id: e?.value
-        }
+        delete prev.income_source_attributes
+        return {...prev, income_source_id: e?.value}
       })
     }
   }
@@ -65,8 +61,9 @@ const PaycheckForm = () => {
       url: "/api/paychecks",
       data: formData
     }, session)
-      .then((res) => {
-        console.log(res)
+      .then(navigate("/income"))
+      .catch((err) => {
+        console.log(err)
       })
   }
 
@@ -83,4 +80,5 @@ const PaycheckForm = () => {
     </>
   );
 }
+
 export default PaycheckForm;

@@ -39,13 +39,15 @@ class PaychecksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_paycheck
-      @paycheck = Paycheck.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_paycheck
+    @paycheck = Paycheck.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def paycheck_params
-      params.require(:paycheck).permit(:date, :amount, :income_source_id, income_source_attributes: [:name])
+  # Only allow a list of trusted parameters through.
+  def paycheck_params
+    params.require(:paycheck).permit(:date, :amount, :income_source_id, income_source_attributes: [:name]).tap do |whitelisted|
+      whitelisted[:income_source_attributes][:user] = @current_user if whitelisted[:income_source_attributes]
     end
+  end
 end
