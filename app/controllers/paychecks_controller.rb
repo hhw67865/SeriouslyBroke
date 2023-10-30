@@ -3,7 +3,7 @@ class PaychecksController < ApplicationController
 
   # GET /paychecks
   def index
-    @paychecks = Paycheck.all
+    @paychecks = @current_user.paychecks.all
 
     render json: @paychecks
   end
@@ -41,7 +41,7 @@ class PaychecksController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_paycheck
-    @paycheck = Paycheck.find(params[:id])
+    @paycheck = @current_user.paychecks.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

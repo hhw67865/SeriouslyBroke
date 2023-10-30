@@ -3,7 +3,7 @@ class ExpensesController < ApplicationController
 
   # GET /expenses
   def index
-    @expenses = Expense.all
+    @expenses = @current_user.expenses.all
 
     render json: @expenses
   end
@@ -41,7 +41,7 @@ class ExpensesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_expense
-      @expense = Expense.find(params[:id])
+      @expense = @current_user.expenses.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

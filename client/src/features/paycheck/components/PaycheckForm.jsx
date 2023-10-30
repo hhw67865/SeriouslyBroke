@@ -1,58 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import fetchAxios from '../../../lib/fetchAxios';
 import { SessionContext } from '../../../context/SessionContext';
 import { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
+import useIncomeSources from '../hooks/useIncomeSources';
+import formatAxiosErrors from '../../../utils/formatAxiosErrors';
 
 const PaycheckForm = () => {
   const session = useContext(SessionContext);
   const navigate = useNavigate();
+  const { incomeSources } = useIncomeSources("/api/income_sources", session);
+  const [errors, setErrors] = useState(null);
 
-  const [incomeSources, setIncomeSources] = useState({});
   const [formData, setFormData] = useState({
     date: "",
     income_source_id: "",
     amount: 0
   })
 
-  useEffect(() => {
-    fetchAxios({
-      method: "GET",
-      url: "/api/income_sources",
-    }, session)
-      .then((res) => {
-        setIncomeSources(res.data.map((incomeSource) => {
-          return {
-            value: incomeSource.id,
-            label: incomeSource.name}
-        }))
-      })
-  }, []);
-
-  function handleFormChange (e) {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  function handleFormChange(e) {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSelectChange (e) {
+function handleSelectChange(e) {
+  setFormData(prev => {
+    const newData = { ...prev };
+    delete newData.income_source_id;
+    delete newData.income_source_attributes;
+
     if (e?.__isNew__) {
-      setFormData((prev)=> {
-        delete prev.income_source_id
-        return {...prev, income_source_attributes: {name: e?.value}}
-      })
+      newData.income_source_attributes = { name: e?.value };
+    } else {
+      newData.income_source_id = e?.value;
     }
-    else {
-      setFormData((prev)=> {
-        delete prev.income_source_attributes
-        return {...prev, income_source_id: e?.value}
-      })
-    }
-  }
 
-  console.log(formData)
+    return newData;
+  });
+}
 
   function handleSubmit (e) {
     e.preventDefault()
@@ -61,9 +46,9 @@ const PaycheckForm = () => {
       url: "/api/paychecks",
       data: formData
     }, session)
-      .then(navigate("/income"))
+      .then(()=>navigate("/income"))
       .catch((err) => {
-        console.log(err)
+        setErrors(formatAxiosErrors(err))
       })
   }
 
@@ -76,6 +61,7 @@ const PaycheckForm = () => {
         <label htmlFor="amount" >Amount:</label>
         <input type="number" name="amount" onChange={handleFormChange}/> <br/>
         <input className="bg-primary" type="submit" value="Submit"/>
+        {errors? errors.map((error, index) => <p key={index}>{error}</p>) : null}
       </form>
     </>
   );
