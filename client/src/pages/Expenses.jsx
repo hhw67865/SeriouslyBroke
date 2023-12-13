@@ -7,8 +7,6 @@ const Expenses = () => {
       <h1>Piechart of expenses</h1>
       <h1>You are up $$$ or down $$$ from last month</h1>
       <h1>Edit expenses</h1>
-      
-
     </>
   );
 };

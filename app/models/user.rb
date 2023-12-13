@@ -17,4 +17,21 @@ class User < ApplicationRecord
       categories.create(name: category)
     end
   end
+
+  def monthly_income(month: Date.today.prev_month.month, year: Date.today.prev_month.year)
+    start_date = Date.new(year, month)
+    end_date = start_date.end_of_month
+
+    paychecks
+      .where(date: start_date..end_date)
+      .sum(:amount)
+  end
+
+  def yearly_average_income(month: Date.today.prev_month.month, year: Date.today.prev_month.year)
+    start_date = Date.new(year)
+    end_date = Date.new(year, month).end_of_month
+    paychecks
+      .where(date: start_date..end_date)
+      .sum(:amount) / month
+  end
 end

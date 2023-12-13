@@ -3,4 +3,8 @@ class Paycheck < ApplicationRecord
   accepts_nested_attributes_for :income_source
 
   validates_presence_of :date, :amount
+  validates :amount, numericality: { greater_than: 0 }
+
+  default_scope { order(date: :desc) }
+
 end

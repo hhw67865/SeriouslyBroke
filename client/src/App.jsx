@@ -22,12 +22,12 @@ function App() {
       ) : (
         <SessionContext.Provider value={session}>
           <Navbar />
-          <div className="mt-40 w-full h-screen flex flex-col items-center">
+          <div className="mt-40 flex h-screen w-full flex-col items-center">
             <Routes>
               <Route path="/" element={<Summary />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/income" element={<Income />} />
-              <Route path="/income/paycheck" element={<Paycheck/>} />
+              <Route path="/income/paycheck" element={<Paycheck />} />
             </Routes>
           </div>
         </SessionContext.Provider>
