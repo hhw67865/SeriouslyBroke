@@ -45,10 +45,7 @@ const PaycheckForm = ({ session, updatePaychecks }) => {
       session,
     )
       .then(() => {
-        setFormData({
-          date: "",
-          amount: 0,
-        });
+        setFormData((prev) => ({ ...prev, date: "", amount: 0 }));
         updatePaychecks();
       })
       .catch((err) => {

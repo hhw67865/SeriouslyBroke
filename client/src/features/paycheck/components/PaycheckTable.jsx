@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import fetchAxios from "../../../lib/fetchAxios";
+import formatMoney from "../../../utils/moneyFormatter";
 
 const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
   const [page, setPage] = useState(0);
@@ -69,9 +70,9 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Source</TableCell>
-              <TableCell align="right">Amount</TableCell>
+              <TableCell><h1 className="font-bold">Date</h1></TableCell>
+              <TableCell><h1 className="font-bold">Source</h1></TableCell>
+              <TableCell align="right"><h1 className="font-bold">Amount</h1></TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
@@ -82,7 +83,7 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
                 <TableRow key={paycheck.id}>
                   <TableCell>{paycheck.date}</TableCell>
                   <TableCell>{paycheck.income_source.name}</TableCell>
-                  <TableCell align="right">{paycheck.amount}</TableCell>
+                  <TableCell align="right">${formatMoney(paycheck.amount)}</TableCell>
                   <TableCell align="right">
                     <div className="cursor-pointer hover:text-red-400">
                       <DeleteIcon

@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :income_sources
     resources :expenses
     resources :categories
-    get 'monthly_income', to: 'users#monthly_income'
+    get 'graph_data', to: 'users#graph_data'
     get 'yearly_average_income', to: 'users#yearly_average_income'
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
