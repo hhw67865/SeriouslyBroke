@@ -25,7 +25,6 @@ const useIncomeSources = (url, session) => {
       })
       .catch((err) => {
         setError(formatAxiosErrors(err));
-        console.log(err);
       });
   }, []);
 

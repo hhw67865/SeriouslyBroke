@@ -6,7 +6,6 @@ function formatKey(key) {
 }
 
 function formatAxiosErrors(errors) {
-  console.log(errors.request.response);
   return Object.keys(errors.response.data).map(
     (key) => `${formatKey(key)} ${errors.response.data[key]}`,
   );

@@ -15,13 +15,12 @@ class ExpensesController < ApplicationController
 
   # POST /expenses
   def create
-    @expense = Expense.new(expense_params)
-
-    if @expense.save
-      render json: @expense, status: :created, location: @expense
-    else
-      render json: @expense.errors, status: :unprocessable_entity
+    Expense.transaction do
+      @expenses = Expense.create!(expenses_params)
     end
+    render json: @expenses, status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   # PATCH/PUT /expenses/1
@@ -38,6 +37,14 @@ class ExpensesController < ApplicationController
     @expense.destroy!
   end
 
+  def week
+    date = Date.parse(params[:date])
+    start_of_week = date.beginning_of_week
+    end_of_week = date.end_of_week
+    @expenses = @current_user.expenses.where('date >= ? AND date <= ?', start_of_week, end_of_week)
+    render json: @expenses
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_expense
@@ -47,5 +54,11 @@ class ExpensesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def expense_params
       params.require(:expense).permit(:name, :amount, :date, :category_id)
+    end
+
+    def expenses_params
+      params.require(:expenses).map do |p|
+        p.permit(:name, :amount, :date, :category_id)
+      end
     end
 end

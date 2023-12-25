@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import fetchAxios from "../../../lib/fetchAxios";
-import formatAxiosErrors from "../../../utils/formatAxiosErrors";
+import fetchAxios from "../lib/fetchAxios";
+import formatAxiosErrors from "../utils/formatAxiosErrors";
 
-const usePaychecks = (url, session) => {
-  const [paychecks, setPaychecks] = useState(null);
+const useAxios = (url, session) => {
+  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [update, setUpdate] = useState(false);
 
-  const updatePaychecks = () => {
+  const updateData = () => {
     setUpdate(!update);
   };
 
@@ -19,14 +19,14 @@ const usePaychecks = (url, session) => {
       session,
     )
       .then((res) => {
-        setPaychecks(res.data);
+        setData(res.data);
       })
       .catch((err) => {
         setError(formatAxiosErrors(err));
       });
   }, [update]);
 
-  return { paychecks, error, updatePaychecks };
+  return { data, error, updateData };
 };
 
-export default usePaychecks;
+export default useAxios;

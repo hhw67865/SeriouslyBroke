@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart } from "@mui/x-charts/BarChart";
 
-
-const MonthlyChart = ({session}) => {
-
+const MonthlyChart = ({ session }) => {
   const [graphData, setGraphData] = useState(null);
   const [months, setMonths] = useState(6);
 
   useEffect(() => {
-    fetchAxios({ method: "GET", url: "/api/graph_data", params: {months: months} }, session).then((res) => {
-      setGraphData(res.data); 
+    fetchAxios(
+      { method: "GET", url: "/api/graph_data", params: { months: months } },
+      session,
+    ).then((res) => {
+      setGraphData(res.data);
     });
   }, [months]);
 
   const handleChange = (event) => {
     setMonths(Number(event.target.value));
-   };
+  };
 
   if (graphData === null) {
     return null;
@@ -25,11 +26,11 @@ const MonthlyChart = ({session}) => {
 
   return (
     <>
-      <div className="flex justify-center mb-4">
-        <select 
-          value={months} 
-          onChange={handleChange} 
-          className="w-64 border border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+      <div className="mb-4 flex justify-center">
+        <select
+          value={months}
+          onChange={handleChange}
+          className="w-64 rounded-md border border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         >
           {[...Array(13).keys()].slice(1).map((month) => (
             <option key={month} value={month}>
@@ -46,5 +47,5 @@ const MonthlyChart = ({session}) => {
       />
     </>
   );
-}
+};
 export default MonthlyChart;

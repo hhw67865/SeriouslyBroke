@@ -1,11 +1,11 @@
-let formatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
+let formatter = new Intl.NumberFormat("en-US", {
+  style: "decimal",
   minimumFractionDigits: 2,
-  maximumFractionDigits: 2
- });
+  maximumFractionDigits: 2,
+});
 
- const formatMoney = (amount) => {
+const formatMoney = (amount) => {
   return formatter.format(amount);
- }
+};
 
- export default formatMoney;
+export default formatMoney;

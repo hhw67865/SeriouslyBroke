@@ -70,9 +70,15 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell><h1 className="font-bold">Date</h1></TableCell>
-              <TableCell><h1 className="font-bold">Source</h1></TableCell>
-              <TableCell align="right"><h1 className="font-bold">Amount</h1></TableCell>
+              <TableCell>
+                <h1 className="font-bold">Date</h1>
+              </TableCell>
+              <TableCell>
+                <h1 className="font-bold">Source</h1>
+              </TableCell>
+              <TableCell align="right">
+                <h1 className="font-bold">Amount</h1>
+              </TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
@@ -83,7 +89,9 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
                 <TableRow key={paycheck.id}>
                   <TableCell>{paycheck.date}</TableCell>
                   <TableCell>{paycheck.income_source.name}</TableCell>
-                  <TableCell align="right">${formatMoney(paycheck.amount)}</TableCell>
+                  <TableCell align="right">
+                    ${formatMoney(paycheck.amount)}
+                  </TableCell>
                   <TableCell align="right">
                     <div className="cursor-pointer hover:text-red-400">
                       <DeleteIcon

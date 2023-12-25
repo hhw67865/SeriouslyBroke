@@ -8,7 +8,7 @@ export default {
         secondary: "#5F741D",
         tertiary: {
           dark: "#800080",
-          light: "FFC0CB",
+          light: "#FFC0CB",
         },
         quaternary: "#FFFFFF",
       },

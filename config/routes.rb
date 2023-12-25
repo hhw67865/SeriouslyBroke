@@ -4,7 +4,11 @@ Rails.application.routes.draw do
     resources :upgrades
     resources :paychecks
     resources :income_sources
-    resources :expenses
+    resources :expenses do
+      collection do
+        get 'week', to: 'expenses#week'
+      end
+    end
     resources :categories
     get 'graph_data', to: 'users#graph_data'
     get 'yearly_average_income', to: 'users#yearly_average_income'
