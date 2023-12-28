@@ -10,10 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_26_180022) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_27_200548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "asset_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.date "date"
+    t.money "amount", scale: 2
+    t.uuid "asset_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_asset_transactions_on_asset_id"
+  end
+
+  create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_asset_types_on_user_id"
+  end
+
+  create_table "assets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "asset_type_id", null: false
+    t.uuid "income_source_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_type_id"], name: "index_assets_on_asset_type_id"
+    t.index ["income_source_id"], name: "index_assets_on_income_source_id"
+  end
 
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
@@ -76,6 +103,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_26_180022) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "asset_transactions", "assets"
+  add_foreign_key "asset_types", "users"
+  add_foreign_key "assets", "asset_types"
+  add_foreign_key "assets", "income_sources"
   add_foreign_key "categories", "users"
   add_foreign_key "expenses", "categories"
   add_foreign_key "income_sources", "users"

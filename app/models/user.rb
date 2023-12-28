@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :income_sources, dependent: :destroy
   has_many :upgrades, through: :income_sources
   has_many :paychecks, through: :income_sources
+  has_many :asset_types, dependent: :destroy
+  has_many :assets, through: :asset_types
 
   after_create :create_default_categories
 
@@ -13,8 +15,10 @@ class User < ApplicationRecord
   DEFAULT_CATEGORIES = ["Housing", "Transportation", "Food", "Utilities", "Medical & Healthcare", "Fitness", "Debt Payments", "Personal Care", "Entertainment", "Pets", "Clothes", "Miscellaneous"]
 
   def create_default_categories
-    DEFAULT_CATEGORIES.each do |category|
-      categories.create(name: category)
-    end
-  end  
+    Category.insert_all(
+      DEFAULT_CATEGORIES.map do |category|
+        { name: category, user_id: self.id }
+      end
+    )
+  end
 end

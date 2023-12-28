@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :asset_transactions
+  resources :assets
+  resources :asset_types
   scope 'api' do
     resources :tasks
     resources :upgrades

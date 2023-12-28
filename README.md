@@ -1,25 +1,7 @@
-# README
+bun run dev
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+rails s
 
-Things you may want to cover:
+bun tailwindcss -i ./src/index.css -o ./dist/output.css --watch
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-# MoneyHugs
+bun prettier . --write
