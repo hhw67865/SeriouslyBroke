@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :liabilities
+  resources :liability_types
   resources :asset_transactions
   resources :assets
   resources :asset_types

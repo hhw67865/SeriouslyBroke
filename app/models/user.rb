@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :asset_types, dependent: :destroy
   has_many :assets, through: :asset_types
   has_many :asset_transactions, through: :assets
+  has_many :liability_types, dependent: :destroy
+  has_many :liabilities, through: :liability_types
 
   after_create :create_default_categories
 
