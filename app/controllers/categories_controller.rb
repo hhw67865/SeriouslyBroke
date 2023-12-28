@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
 
   # GET /categories
   def index
-    @categories = @current_user.categories.all
+    @categories = @current_user.categories
 
     render json: @categories
   end

@@ -3,7 +3,7 @@ class ExpensesController < ApplicationController
 
   # GET /expenses
   def index
-    @expenses = @current_user.expenses.all
+    @expenses = @current_user.expenses
 
     render json: @expenses
   end

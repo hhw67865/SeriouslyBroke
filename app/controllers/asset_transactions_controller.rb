@@ -3,7 +3,7 @@ class AssetTransactionsController < ApplicationController
 
   # GET /asset_transactions
   def index
-    @asset_transactions = AssetTransaction.all
+    @asset_transactions = @current_user.asset_transactions
 
     render json: @asset_transactions
   end
@@ -41,7 +41,7 @@ class AssetTransactionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_asset_transaction
-      @asset_transaction = AssetTransaction.find(params[:id])
+      @asset_transaction = @current_user.asset_transactions.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

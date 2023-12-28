@@ -3,7 +3,7 @@ class IncomeSourcesController < ApplicationController
 
   # GET /income_sources
   def index
-    @income_sources = @current_user.income_sources.all
+    @income_sources = @current_user.income_sources
 
     render json: @income_sources
   end

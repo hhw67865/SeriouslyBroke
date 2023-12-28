@@ -3,7 +3,7 @@ class PaychecksController < ApplicationController
 
   # GET /paychecks
   def index
-    @paychecks = @current_user.paychecks.all
+    @paychecks = @current_user.paychecks
 
     render json: @paychecks.order(date: :desc)
   end

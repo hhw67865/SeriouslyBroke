@@ -3,7 +3,7 @@ class AssetTypesController < ApplicationController
 
   # GET /asset_types
   def index
-    @asset_types = AssetType.all
+    @asset_types = @current_user.asset_types
 
     render json: @asset_types
   end
@@ -15,7 +15,7 @@ class AssetTypesController < ApplicationController
 
   # POST /asset_types
   def create
-    @asset_type = AssetType.new(asset_type_params)
+    @asset_type = @current_user.asset_types.new(asset_type_params)
 
     if @asset_type.save
       render json: @asset_type, status: :created, location: @asset_type
@@ -41,7 +41,7 @@ class AssetTypesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_asset_type
-      @asset_type = AssetType.find(params[:id])
+      @asset_type = @current_user.asset_types.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
