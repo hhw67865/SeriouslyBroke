@@ -1,3 +1,4 @@
+import formatMoney from "../../../utils/moneyFormatter";
 import ExpensesCard from "./ExpensesCard";
 
 const WeekViewerColumn = ({
@@ -25,10 +26,10 @@ const WeekViewerColumn = ({
       </div>
       <div className="text-sm font-bold">
         {" "}
-        Total: $
-        {dailyExpenses
-          .reduce((total, expense) => total + parseFloat(expense.amount), 0)
-          .toFixed(2)}{" "}
+        Total: 
+        {formatMoney(dailyExpenses
+          .reduce((total, expense) => total + parseFloat(expense.amount), 0))}
+          
       </div>
     </div>
   );

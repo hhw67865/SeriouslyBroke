@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-  resources :liabilities
-  resources :liability_types
-  resources :asset_transactions
-  resources :assets
-  resources :asset_types
   scope 'api' do
     resources :tasks
     resources :upgrades
@@ -15,6 +10,11 @@ Rails.application.routes.draw do
       end
     end
     resources :categories
+    resources :liabilities
+    resources :liability_types
+    resources :asset_transactions
+    resources :assets
+    resources :asset_types
     get 'graph_data', to: 'users#graph_data'
     get 'yearly_average_income', to: 'users#yearly_average_income'
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

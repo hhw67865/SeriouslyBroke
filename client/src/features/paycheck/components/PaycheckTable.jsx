@@ -90,7 +90,7 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
                   <TableCell>{paycheck.date}</TableCell>
                   <TableCell>{paycheck.income_source.name}</TableCell>
                   <TableCell align="right">
-                    ${formatMoney(paycheck.amount)}
+                    {formatMoney(paycheck.amount)}
                   </TableCell>
                   <TableCell align="right">
                     <div className="cursor-pointer hover:text-red-400">

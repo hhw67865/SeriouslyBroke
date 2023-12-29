@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAxios from "../../../hooks/useAxios";
+import useAxiosGet from "../../../hooks/useAxiosGet";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 
@@ -8,7 +8,7 @@ const ExpenseForm = ({ session, updateExpenses }) => {
     { name: "", category_id: "", amount: "" },
   ]);
   const [date, setDate] = useState("");
-  const { data: categories } = useAxios("/api/categories", session);
+  const { data: categories } = useAxiosGet("/api/categories", session);
   const [errors, setErrors] = useState(null);
 
   const handleChange = (index, event) => {

@@ -22,6 +22,18 @@ const Navbar = () => {
       >
         Income
       </NavLink>
+      <NavLink
+        to="/Assets"
+        className="flex items-center px-16 text-4xl font-extrabold hover:text-secondary"
+      >
+        Assets
+      </NavLink>
+      <NavLink
+        to="/Liabilities"
+        className="flex items-center px-16 text-4xl font-extrabold hover:text-secondary"
+      >
+        Liabilities
+      </NavLink>
       <div className="flex flex-grow items-center justify-end">
         <UserButton afterSignOutUrl={"/"} userProfileMode="modal" />
       </div>

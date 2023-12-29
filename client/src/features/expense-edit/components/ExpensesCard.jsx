@@ -1,5 +1,6 @@
 import { useState } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
+import formatMoney from "../../../utils/moneyFormatter";
 
 const ExpensesCard = ({
   editingExpenseId,
@@ -53,7 +54,7 @@ const ExpensesCard = ({
       {editingExpenseId !== expense.id ? (
         <>
           <h3 className="text-sm font-semibold">{expense.name}</h3>
-          <p className="text-sm">${parseFloat(expense.amount).toFixed(2)}</p>
+          <p className="text-sm">{formatMoney(expense.amount)}</p>
         </>
       ) : (
         <form onSubmit={handleSubmitEdit}>
@@ -83,7 +84,7 @@ const ExpensesCard = ({
                 setEditingExpenseId(expense.id);
                 setEditExpense({
                   name: expense.name,
-                  amount: parseFloat(expense.amount).toFixed(2),
+                  amount: expense.amount,
                 });
               }}
             >

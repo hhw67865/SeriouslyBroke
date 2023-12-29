@@ -3,7 +3,7 @@ class AssetTransactionsController < ApplicationController
 
   # GET /asset_transactions
   def index
-    @asset_transactions = @current_user.asset_transactions
+    @asset_transactions = @current_user.asset_transactions.order(date: :desc)
 
     render json: @asset_transactions
   end

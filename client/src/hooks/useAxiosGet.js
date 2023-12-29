@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import fetchAxios from "../lib/fetchAxios";
 import formatAxiosErrors from "../utils/formatAxiosErrors";
 
-const useAxios = (url, session) => {
-  const [data, setData] = useState(null);
+const useAxiosGet = (url, session) => {
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [update, setUpdate] = useState(false);
 
@@ -29,4 +29,4 @@ const useAxios = (url, session) => {
   return { data, error, updateData };
 };
 
-export default useAxios;
+export default useAxiosGet;
