@@ -8,6 +8,6 @@ let formatter = new Intl.NumberFormat("en-US", {
 const formatMoney = (amount) => {
   let formattedAmount = formatter.format(Math.abs(amount));
   return amount >= 0 ? `$${formattedAmount}` : `-$${formattedAmount}`;
- };
+};
 
 export default formatMoney;

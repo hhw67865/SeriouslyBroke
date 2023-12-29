@@ -2,7 +2,6 @@ import "./App.css";
 
 import { useSession } from "@clerk/clerk-react";
 
-
 import Data from "./Data";
 
 function App() {
@@ -12,9 +11,7 @@ function App() {
     return null;
   }
 
-  return (
-    <Data isSignedIn={isSignedIn} session={session}/>    
-  );
+  return <Data isSignedIn={isSignedIn} session={session} />;
 }
 
 export default App;

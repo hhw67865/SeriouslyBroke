@@ -14,9 +14,9 @@ import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import useAxiosGet from "./hooks/useAxiosGet";
 
-const Data = ({session, isSignedIn}) => {
+const Data = ({ session, isSignedIn }) => {
   const getTransactions = useAxiosGet("/api/asset_transactions", session);
-  
+
   return (
     <div className="flex flex-col">
       <main className="mb-10 mt-auto min-h-screen flex-grow">
@@ -34,7 +34,10 @@ const Data = ({session, isSignedIn}) => {
                 <Route path="/expenses/edit" element={<EditExpenses />} />
                 <Route path="/income" element={<Income />} />
                 <Route path="/income/paycheck" element={<Paycheck />} />
-                <Route path="/assets" element={<Assets getTransactions={getTransactions} />} />
+                <Route
+                  path="/assets"
+                  element={<Assets getTransactions={getTransactions} />}
+                />
                 <Route path="/assets/transactions" element={null} />
                 <Route path="/liabilities" element={<Liabilities />} />
               </Routes>
@@ -45,5 +48,5 @@ const Data = ({session, isSignedIn}) => {
       <Footer />
     </div>
   );
-}
+};
 export default Data;

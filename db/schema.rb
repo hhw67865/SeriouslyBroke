@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
   create_table "asset_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.date "date"
     t.money "amount", scale: 2
+    t.text "description"
     t.uuid "asset_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -35,11 +36,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
   create_table "assets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "asset_type_id", null: false
-    t.uuid "income_source_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_type_id"], name: "index_assets_on_asset_type_id"
-    t.index ["income_source_id"], name: "index_assets_on_income_source_id"
   end
 
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -63,7 +62,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
 
   create_table "income_sources", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
-    t.money "last_month_income", scale: 2
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -127,7 +125,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
   add_foreign_key "asset_transactions", "assets"
   add_foreign_key "asset_types", "users"
   add_foreign_key "assets", "asset_types"
-  add_foreign_key "assets", "income_sources"
   add_foreign_key "categories", "users"
   add_foreign_key "expenses", "categories"
   add_foreign_key "income_sources", "users"
