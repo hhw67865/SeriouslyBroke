@@ -1,14 +1,13 @@
 import { useState } from "react";
-import useAxiosGet from "../../../hooks/useAxiosGet";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
+import Errors from "../../../components/errors/Errors";
 
-const ExpenseForm = ({ session, updateExpenses }) => {
+const ExpenseForm = ({ session, getExpenses, getCategories }) => {
   const [expenses, setExpenses] = useState([
     { name: "", category_id: "", amount: "" },
   ]);
   const [date, setDate] = useState("");
-  const { data: categories } = useAxiosGet("/api/categories", session);
   const [errors, setErrors] = useState(null);
 
   const handleChange = (index, event) => {
@@ -45,7 +44,7 @@ const ExpenseForm = ({ session, updateExpenses }) => {
     )
       .then(() => {
         setExpenses([{ name: "", category_id: "", amount: "" }]);
-        updateExpenses();
+        getExpenses.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };
@@ -93,8 +92,7 @@ const ExpenseForm = ({ session, updateExpenses }) => {
                 className="rounded border p-2"
               >
                 <option value="">Select a category</option>
-                {categories &&
-                  categories.map((category) => (
+                {getCategories.data.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
@@ -138,15 +136,7 @@ const ExpenseForm = ({ session, updateExpenses }) => {
           value="Submit"
           className="rounded bg-primary p-2 text-xl text-white hover:bg-secondary"
         />
-        {errors && (
-          <div className="text-red-500">
-            <ul>
-              {errors.map((error, idx) => (
-                <li key={idx}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <Errors errors={errors} />
       </form>
     </div>
   );

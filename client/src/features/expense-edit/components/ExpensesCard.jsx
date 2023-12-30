@@ -7,7 +7,7 @@ const ExpensesCard = ({
   setEditingExpenseId,
   expense,
   session,
-  updateExpenses,
+  getExpenses
 }) => {
   const [showButtons, setShowButtons] = useState(false);
   const [editExpense, setEditExpense] = useState({
@@ -18,7 +18,7 @@ const ExpensesCard = ({
   function handleDelete(id) {
     fetchAxios({ method: "DELETE", url: `/api/expenses/${id}` }, session).then(
       () => {
-        updateExpenses();
+        getExpenses.updateData();
       },
     );
   }
@@ -40,7 +40,7 @@ const ExpensesCard = ({
       .then(() => {
         setEditingExpenseId(null);
         setEditExpense({ name: "", amount: "" });
-        updateExpenses();
+        getExpenses.updateData();
       })
       .catch((err) => console.log(err));
   }

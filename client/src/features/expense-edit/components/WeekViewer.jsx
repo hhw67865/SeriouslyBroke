@@ -1,29 +1,15 @@
-import { useEffect, useState } from "react";
-import fetchAxios from "../../../lib/fetchAxios";
+import { useState } from "react";
 import WeekSelector from "./WeekSelector";
 import WeekViewerColumn from "./WeekViewerColumn";
 
-const WeekViewer = ({ session, update, updateExpenses }) => {
+const WeekViewer = ({ session, getExpenses }) => {
   const [currentWeek, setCurrentWeek] = useState(() => {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
     return startOfDay.getTime();
   });
-  const [expenses, setExpenses] = useState([]);
   const [editingExpenseId, setEditingExpenseId] = useState(null);
-
-  useEffect(() => {
-    fetchAxios(
-      {
-        method: "GET",
-        url: "/api/expenses",
-      },
-      session,
-    ).then((res) => {
-      setExpenses(res.data);
-    });
-  }, [update]);
 
   const startOfWeek = new Date(currentWeek);
   let dayOfWeek = startOfWeek.getDay();
@@ -49,7 +35,7 @@ const WeekViewer = ({ session, update, updateExpenses }) => {
             month: "short",
             day: "numeric",
           });
-          const dailyExpenses = expenses.filter(
+          const dailyExpenses = getExpenses.data.filter(
             (expense) => expense.date === date.toISOString().split("T")[0],
           );
           return (
@@ -59,8 +45,8 @@ const WeekViewer = ({ session, update, updateExpenses }) => {
               formattedDate={formattedDate}
               dailyExpenses={dailyExpenses}
               editingExpenseId={editingExpenseId}
-              updateExpenses={updateExpenses}
               setEditingExpenseId={setEditingExpenseId}
+              getExpenses={getExpenses}
             />
           );
         })}

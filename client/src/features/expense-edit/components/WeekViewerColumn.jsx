@@ -5,9 +5,9 @@ const WeekViewerColumn = ({
   formattedDate,
   dailyExpenses,
   editingExpenseId,
-  updateExpenses,
   session,
   setEditingExpenseId,
+  getExpenses
 }) => {
   return (
     <div className="divide-y divide-gray-200 rounded-md border border-gray-200 p-2 shadow-sm">
@@ -19,7 +19,7 @@ const WeekViewerColumn = ({
             editingExpenseId={editingExpenseId}
             expense={expense}
             session={session}
-            updateExpenses={updateExpenses}
+            getExpenses={getExpenses} 
             setEditingExpenseId={setEditingExpenseId}
           />
         ))}
