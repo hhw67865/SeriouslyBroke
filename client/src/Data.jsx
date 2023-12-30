@@ -16,6 +16,7 @@ import useAxiosGet from "./hooks/useAxiosGet";
 
 const Data = ({ session, isSignedIn }) => {
   const getTransactions = useAxiosGet("/api/asset_transactions", session);
+  const getAssetTypes = useAxiosGet("/api/asset_types", session);
 
   return (
     <div className="flex flex-col">
@@ -36,9 +37,13 @@ const Data = ({ session, isSignedIn }) => {
                 <Route path="/income/paycheck" element={<Paycheck />} />
                 <Route
                   path="/assets"
-                  element={<Assets getTransactions={getTransactions} />}
+                  element={
+                    <Assets
+                      getAssetTypes={getAssetTypes}
+                      getTransactions={getTransactions}
+                    />
+                  }
                 />
-                <Route path="/assets/transactions" element={null} />
                 <Route path="/liabilities" element={<Liabilities />} />
               </Routes>
             </div>

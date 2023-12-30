@@ -1,14 +1,9 @@
 import { AssetContainer, AssetTypeContainer } from "../features/assets";
 import { SessionContext } from "../context/SessionContext";
 import { useContext, useState } from "react";
-import useAxiosGet from "../hooks/useAxiosGet";
 
-const Assets = ({ getTransactions }) => {
+const Assets = ({ getTransactions, getAssetTypes }) => {
   const session = useContext(SessionContext);
-  const { data: assetTypes, updateData: updateAssetTypes } = useAxiosGet(
-    "/api/asset_types",
-    session,
-  );
   const [assetTypeId, setAssetTypeId] = useState(null);
 
   return (
@@ -16,17 +11,15 @@ const Assets = ({ getTransactions }) => {
       <div className="w-full md:w-1/3">
         <AssetTypeContainer
           session={session}
-          assetTypes={assetTypes}
-          updateAssetTypes={updateAssetTypes}
+          getAssetTypes={getAssetTypes}
           setAssetTypeId={setAssetTypeId}
         />
       </div>
       <div className="w-full md:w-2/3">
         <AssetContainer
           session={session}
-          assetTypes={assetTypes}
+          getAssetTypes={getAssetTypes}
           assetTypeId={assetTypeId}
-          updateAssetTypes={updateAssetTypes}
           getTransactions={getTransactions}
         />
       </div>
