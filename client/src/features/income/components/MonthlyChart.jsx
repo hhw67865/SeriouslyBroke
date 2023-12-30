@@ -1,20 +1,8 @@
-import { useEffect, useState } from "react";
-import fetchAxios from "../../../lib/fetchAxios";
+
 
 import { BarChart } from "@mui/x-charts/BarChart";
 
-const MonthlyChart = ({ session }) => {
-  const [graphData, setGraphData] = useState(null);
-  const [months, setMonths] = useState(6);
-
-  useEffect(() => {
-    fetchAxios(
-      { method: "GET", url: "/api/graph_data", params: { months: months } },
-      session,
-    ).then((res) => {
-      setGraphData(res.data);
-    });
-  }, [months]);
+const MonthlyChart = ({ graphData, setMonths, months }) => {
 
   const handleChange = (event) => {
     setMonths(Number(event.target.value));

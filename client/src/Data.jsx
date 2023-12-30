@@ -13,12 +13,26 @@ import {
 import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import useAxiosGet from "./hooks/useAxiosGet";
+import { useEffect, useState } from "react";
+import fetchAxios from "./lib/fetchAxios";
 
 const Data = ({ session, isSignedIn }) => {
+  const [graphData, setGraphData] = useState(null);
+  const [months, setMonths] = useState(6);
+
   const getTransactions = useAxiosGet("/api/asset_transactions", session);
   const getAssetTypes = useAxiosGet("/api/asset_types", session);
   const getExpenses = useAxiosGet("/api/expenses", session);
   const getCategories = useAxiosGet("/api/categories", session);
+
+  useEffect(() => {
+    fetchAxios(
+      { method: "GET", url: "/api/graph_data", params: { months: months } },
+      session,
+    ).then((res) => {
+      setGraphData(res.data);
+    });
+  }, [months]);
 
   return (
     <div className="flex flex-col">
@@ -35,7 +49,7 @@ const Data = ({ session, isSignedIn }) => {
                 <Route path="/" element={<Summary />} />
                 <Route path="/expenses" element={<Expenses />} />
                 <Route path="/expenses/edit" element={<EditExpenses getExpenses={getExpenses} getCategories={getCategories} />} />
-                <Route path="/income" element={<Income />} />
+                <Route path="/income" element={<Income graphData={graphData} setMonths={setMonths} months={months} />} />
                 <Route path="/income/paycheck" element={<Paycheck />} />
                 <Route
                   path="/assets"
