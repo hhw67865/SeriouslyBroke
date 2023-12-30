@@ -4,7 +4,7 @@ import fetchAxios from "../../../lib/fetchAxios";
 import useIncomeSources from "../hooks/useIncomeSources";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 
-const PaycheckForm = ({ session, updatePaychecks }) => {
+const PaycheckForm = ({ session, getPaychecks }) => {
   const { incomeSources } = useIncomeSources("/api/income_sources", session);
   const [errors, setErrors] = useState(null);
 
@@ -46,7 +46,7 @@ const PaycheckForm = ({ session, updatePaychecks }) => {
     )
       .then(() => {
         setFormData((prev) => ({ ...prev, date: "", amount: 0 }));
-        updatePaychecks();
+        getPaychecks.updateData();
       })
       .catch((err) => {
         setErrors(formatAxiosErrors(err));

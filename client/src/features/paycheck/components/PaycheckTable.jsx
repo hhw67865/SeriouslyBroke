@@ -12,15 +12,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatMoney from "../../../utils/moneyFormatter";
 
-const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
+const PaycheckTable = ({ getPaychecks, session }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredPaychecks, setFilteredPaychecks] = useState(paychecks);
+  const [filteredPaychecks, setFilteredPaychecks] = useState(getPaychecks.data);
 
   useEffect(() => {
     setFilteredPaychecks(
-      paychecks.filter((paycheck) => {
+      getPaychecks.data.filter((paycheck) => {
         return (
           paycheck.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
           paycheck.income_source.name
@@ -29,7 +29,7 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
         );
       }),
     );
-  }, [paychecks, searchTerm]);
+  }, [getPaychecks.data, searchTerm]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -53,7 +53,7 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
       },
       session,
     ).then(() => {
-      updatePaychecks();
+      getPaychecks.updateData();
     });
   };
 
@@ -111,7 +111,7 @@ const PaycheckTable = ({ paychecks, updatePaychecks, session }) => {
         </Table>
         <TablePagination
           component="div"
-          count={paychecks.length}
+          count={getPaychecks.data.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}

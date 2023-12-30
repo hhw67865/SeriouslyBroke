@@ -24,6 +24,7 @@ const Data = ({ session, isSignedIn }) => {
   const getAssetTypes = useAxiosGet("/api/asset_types", session);
   const getExpenses = useAxiosGet("/api/expenses", session);
   const getCategories = useAxiosGet("/api/categories", session);
+  const getPaychecks = useAxiosGet("/api/paychecks", session);
 
   useEffect(() => {
     fetchAxios(
@@ -50,7 +51,7 @@ const Data = ({ session, isSignedIn }) => {
                 <Route path="/expenses" element={<Expenses />} />
                 <Route path="/expenses/edit" element={<EditExpenses getExpenses={getExpenses} getCategories={getCategories} />} />
                 <Route path="/income" element={<Income graphData={graphData} setMonths={setMonths} months={months} />} />
-                <Route path="/income/paycheck" element={<Paycheck />} />
+                <Route path="/income/paycheck" element={<Paycheck getPaychecks={getPaychecks} />} />
                 <Route
                   path="/assets"
                   element={
