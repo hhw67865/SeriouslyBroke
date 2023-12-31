@@ -8,8 +8,6 @@ class User < ApplicationRecord
   has_many :asset_types, dependent: :destroy
   has_many :assets, through: :asset_types
   has_many :asset_transactions, through: :assets
-  has_many :liability_types, dependent: :destroy
-  has_many :liabilities, through: :liability_types
 
   after_create :create_default_categories
   after_create :create_default_asset_types
@@ -17,7 +15,7 @@ class User < ApplicationRecord
   validates :clerk_user_id, uniqueness: true
 
   DEFAULT_CATEGORIES = ["Housing", "Transportation", "Food", "Utilities", "Medical & Healthcare", "Fitness", "Debt Payments", "Personal Care", "Entertainment", "Pets", "Clothes", "Miscellaneous"]
-  DEFAULT_ASSET_TYPES = ["Cash", "Checking", "Savings", "Investments", "Real Estate", "Other"]
+  DEFAULT_ASSET_TYPES = ["Cash", "Checking", "Savings", "Investments", "Real Estate"]
 
   def create_default_categories
     Category.insert_all(

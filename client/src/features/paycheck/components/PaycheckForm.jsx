@@ -1,13 +1,11 @@
 import { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import fetchAxios from "../../../lib/fetchAxios";
-import useIncomeSources from "../hooks/useIncomeSources";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
+import Errors from "../../../components/errors/Errors";
 
-const PaycheckForm = ({ session, getPaychecks }) => {
-  const { incomeSources } = useIncomeSources("/api/income_sources", session);
+const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
   const [errors, setErrors] = useState(null);
-
   const [formData, setFormData] = useState({
     date: "",
     income_source_id: "",
@@ -47,6 +45,8 @@ const PaycheckForm = ({ session, getPaychecks }) => {
       .then(() => {
         setFormData((prev) => ({ ...prev, date: "", amount: 0 }));
         getPaychecks.updateData();
+        getIncomeSources.updateData();
+        setErrors(null);
       })
       .catch((err) => {
         setErrors(formatAxiosErrors(err));
@@ -77,7 +77,10 @@ const PaycheckForm = ({ session, getPaychecks }) => {
         <div className="mb-6">
           <CreatableSelect
             isClearable
-            options={incomeSources}
+            options={getIncomeSources.data.map((incomeSource) => ({
+              label: incomeSource.name,
+              value: incomeSource.id,
+            }))}
             onChange={handleSelectChange}
           />
         </div>
@@ -102,13 +105,7 @@ const PaycheckForm = ({ session, getPaychecks }) => {
             value="Submit"
           />
         </div>
-        {errors
-          ? errors.map((error, index) => (
-              <p className="text-xs italic text-red-500" key={index}>
-                {error}
-              </p>
-            ))
-          : null}
+        <Errors errors={errors} />
       </form>
     </>
   );

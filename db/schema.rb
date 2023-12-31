@@ -70,8 +70,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
 
   create_table "liabilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
-    t.money "amount", scale: 2
-    t.date "maturity_date"
+    t.money "original_value", scale: 2
+    t.money "current_value", scale: 2
+    t.integer "term_length"
     t.decimal "interest_rate"
     t.uuid "liability_type_id", null: false
     t.uuid "category_id", null: false

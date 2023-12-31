@@ -10,9 +10,7 @@ Rails.application.routes.draw do
       end
     end
     resources :categories
-    resources :liabilities
-    resources :liability_types
-    resources :asset_transactions
+        resources :asset_transactions
     resources :assets
     resources :asset_types
     get 'graph_data', to: 'users#graph_data'

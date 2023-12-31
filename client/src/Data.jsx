@@ -8,7 +8,6 @@ import {
   Summary,
   EditExpenses,
   Assets,
-  Liabilities,
 } from "./pages";
 import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
@@ -25,6 +24,7 @@ const Data = ({ session, isSignedIn }) => {
   const getExpenses = useAxiosGet("/api/expenses", session);
   const getCategories = useAxiosGet("/api/categories", session);
   const getPaychecks = useAxiosGet("/api/paychecks", session);
+  const getIncomeSources = useAxiosGet("/api/income_sources", session);
 
   useEffect(() => {
     fetchAxios(
@@ -33,7 +33,7 @@ const Data = ({ session, isSignedIn }) => {
     ).then((res) => {
       setGraphData(res.data);
     });
-  }, [months]);
+  }, [months, getPaychecks.data]);
 
   return (
     <div className="flex flex-col">
@@ -51,7 +51,7 @@ const Data = ({ session, isSignedIn }) => {
                 <Route path="/expenses" element={<Expenses />} />
                 <Route path="/expenses/edit" element={<EditExpenses getExpenses={getExpenses} getCategories={getCategories} />} />
                 <Route path="/income" element={<Income graphData={graphData} setMonths={setMonths} months={months} />} />
-                <Route path="/income/paycheck" element={<Paycheck getPaychecks={getPaychecks} />} />
+                <Route path="/income/paycheck" element={<Paycheck getPaychecks={getPaychecks} getIncomeSources={getIncomeSources} />} />
                 <Route
                   path="/assets"
                   element={
@@ -61,7 +61,6 @@ const Data = ({ session, isSignedIn }) => {
                     />
                   }
                 />
-                <Route path="/liabilities" element={<Liabilities />} />
               </Routes>
             </div>
           </SessionContext.Provider>
