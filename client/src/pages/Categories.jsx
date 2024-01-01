@@ -5,7 +5,7 @@ import {
   CategorySelectionContainer,
 } from "../features/category";
 
-const Categories = ({ getCategories }) => {
+const Categories = ({ getCategories, getExpenses }) => {
   const session = useContext(SessionContext);
   const [categoryId, setCategoryId] = useState(null);
 
@@ -23,6 +23,7 @@ const Categories = ({ getCategories }) => {
           session={session}
           getCategories={getCategories}
           categoryId={categoryId}
+          getExpenses={getExpenses}
         />
       </div>
     </div>

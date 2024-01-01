@@ -10,6 +10,7 @@ const EditCategoryForm = ({
   session,
   setShowForm,
   getCategories,
+  getExpenses
 }) => {
   const [hsva, setHsva] = useState({ h: 214, s: 43, v: 90, a: 1 });
   const [minimum_amount, setMinimumAmount] = useState(() =>
@@ -32,6 +33,7 @@ const EditCategoryForm = ({
       .then(() => {
         getCategories.updateData();
         setShowForm(false);
+        getExpenses.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   }

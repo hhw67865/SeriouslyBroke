@@ -1,7 +1,7 @@
 import { useState } from "react";
 import EditCategoryForm from "./EditCategoryForm";
 
-const CategoryContainer = ({ categoryId, session, getCategories }) => {
+const CategoryContainer = ({ categoryId, session, getCategories, getExpenses }) => {
   const [showForm, setShowForm] = useState(false);
 
   const category = getCategories.data?.find(
@@ -58,6 +58,7 @@ const CategoryContainer = ({ categoryId, session, getCategories }) => {
                   getCategories={getCategories}
                   setShowForm={setShowForm}
                   category={category}
+                  getExpenses={getExpenses}
                 />
               )}
             </div>
