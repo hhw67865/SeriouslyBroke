@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_27_200548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.money "minimum_amount", scale: 2
+    t.string "color"
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -66,28 +67,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_income_sources_on_user_id"
-  end
-
-  create_table "liabilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.money "original_value", scale: 2
-    t.money "current_value", scale: 2
-    t.integer "term_length"
-    t.decimal "interest_rate"
-    t.uuid "liability_type_id", null: false
-    t.uuid "category_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_liabilities_on_category_id"
-    t.index ["liability_type_id"], name: "index_liabilities_on_liability_type_id"
-  end
-
-  create_table "liability_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.uuid "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_liability_types_on_user_id"
   end
 
   create_table "paychecks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -129,9 +108,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_28_015459) do
   add_foreign_key "categories", "users"
   add_foreign_key "expenses", "categories"
   add_foreign_key "income_sources", "users"
-  add_foreign_key "liabilities", "categories"
-  add_foreign_key "liabilities", "liability_types"
-  add_foreign_key "liability_types", "users"
   add_foreign_key "paychecks", "income_sources"
   add_foreign_key "tasks", "upgrades"
   add_foreign_key "upgrades", "income_sources"

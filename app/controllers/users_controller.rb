@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
 
+  def index
+    render json: @current_user
+  end
+
   def graph_data
     start_date = Date.today.months_ago(params[:months].to_i-1).beginning_of_month
     end_date = Date.today.end_of_month

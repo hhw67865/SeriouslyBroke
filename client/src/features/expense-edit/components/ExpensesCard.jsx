@@ -47,9 +47,10 @@ const ExpensesCard = ({
 
   return (
     <div
-      className="divide-y rounded-md bg-white p-1 shadow-md"
+      className="divide-y rounded-md bg-white p-1 shadow-md border-2"
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}
+      style={{ borderColor: expense.category.color }}
     >
       {editingExpenseId !== expense.id ? (
         <>

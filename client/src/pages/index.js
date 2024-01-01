@@ -5,7 +5,7 @@ import Summary from "./Summary";
 import Paycheck from "./Paycheck";
 import EditExpenses from "./EditExpenses";
 import Assets from "./Assets";
-import Liabilities from "./Liabilities";
+import Categories from "./Categories";
 
 export {
   Expenses,
@@ -15,5 +15,5 @@ export {
   Paycheck,
   EditExpenses,
   Assets,
-  Liabilities,
+  Categories
 };

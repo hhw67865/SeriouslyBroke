@@ -25,8 +25,7 @@ const WeekViewerColumn = ({
         ))}
       </div>
       <div className="text-sm font-bold">
-        {" "}
-        Total:
+        Total: {" "}
         {formatMoney(
           dailyExpenses.reduce(
             (total, expense) => total + parseFloat(expense.amount),
