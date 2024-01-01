@@ -7,7 +7,7 @@ import {
   Summary,
   EditExpenses,
   Assets,
-  Categories
+  Categories,
 } from "./pages";
 import Navbar from "./layouts/Navbar";
 import useAxiosGet from "./hooks/useAxiosGet";
@@ -41,10 +41,43 @@ const Data = ({ session }) => {
         <Routes>
           <Route path="/" element={<Summary />} />
           <Route path="/expenses" element={<Expenses />} />
-          <Route path="/expenses/edit" element={<EditExpenses getExpenses={getExpenses} getCategories={getCategories} />} />
-          <Route path="/expenses/categories" element={<Categories getExpenses={getExpenses} getCategories={getCategories} />} />
-          <Route path="/income" element={<Income graphData={graphData} setMonths={setMonths} months={months} />} />
-          <Route path="/income/paycheck" element={<Paycheck getPaychecks={getPaychecks} getIncomeSources={getIncomeSources} />} />
+          <Route
+            path="/expenses/edit"
+            element={
+              <EditExpenses
+                getExpenses={getExpenses}
+                getCategories={getCategories}
+              />
+            }
+          />
+          <Route
+            path="/expenses/categories"
+            element={
+              <Categories
+                getExpenses={getExpenses}
+                getCategories={getCategories}
+              />
+            }
+          />
+          <Route
+            path="/income"
+            element={
+              <Income
+                graphData={graphData}
+                setMonths={setMonths}
+                months={months}
+              />
+            }
+          />
+          <Route
+            path="/income/paycheck"
+            element={
+              <Paycheck
+                getPaychecks={getPaychecks}
+                getIncomeSources={getIncomeSources}
+              />
+            }
+          />
           <Route
             path="/assets"
             element={

@@ -9,9 +9,6 @@ const AssetCard = ({ asset, getTransactions, session, getAssetTypes }) => {
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-
-
-
   const assetTransactions = getTransactions.data?.filter(
     (transaction) => transaction.asset.id === asset.id,
   );
@@ -44,7 +41,13 @@ const AssetCard = ({ asset, getTransactions, session, getAssetTypes }) => {
         </button>
       </div>
       {showForm && (
-        <TransactionForm asset={asset} setShowForm={setShowForm} session={session} getTransactions={getTransactions} getAssetTypes={getAssetTypes} />
+        <TransactionForm
+          asset={asset}
+          setShowForm={setShowForm}
+          session={session}
+          getTransactions={getTransactions}
+          getAssetTypes={getAssetTypes}
+        />
       )}
 
       {showTransactions && (
@@ -58,7 +61,12 @@ const AssetCard = ({ asset, getTransactions, session, getAssetTypes }) => {
               getAssetTypes={getAssetTypes}
             />
           ))}
-          <TransactionsPagination setCurrentPage={setCurrentPage} currentPage={currentPage} assetTransactions={assetTransactions} transactionsPerPage={transactionsPerPage} />
+          <TransactionsPagination
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+            assetTransactions={assetTransactions}
+            transactionsPerPage={transactionsPerPage}
+          />
         </div>
       )}
     </div>

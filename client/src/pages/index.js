@@ -15,5 +15,5 @@ export {
   Paycheck,
   EditExpenses,
   Assets,
-  Categories
+  Categories,
 };

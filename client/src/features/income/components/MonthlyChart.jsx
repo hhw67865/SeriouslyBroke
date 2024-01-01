@@ -1,9 +1,6 @@
-
-
 import { BarChart } from "@mui/x-charts/BarChart";
 
 const MonthlyChart = ({ graphData, setMonths, months }) => {
-
   const handleChange = (event) => {
     setMonths(Number(event.target.value));
   };

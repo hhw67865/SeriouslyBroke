@@ -7,7 +7,7 @@ const ExpensesCard = ({
   setEditingExpenseId,
   expense,
   session,
-  getExpenses
+  getExpenses,
 }) => {
   const [showButtons, setShowButtons] = useState(false);
   const [editExpense, setEditExpense] = useState({
@@ -47,7 +47,7 @@ const ExpensesCard = ({
 
   return (
     <div
-      className="divide-y rounded-md bg-white p-1 shadow-md border-2"
+      className="divide-y rounded-md border-2 bg-white p-1 shadow-md"
       onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => setShowButtons(false)}
       style={{ borderColor: expense.category.color }}

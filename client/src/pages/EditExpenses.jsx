@@ -2,7 +2,7 @@ import { WeekViewer, ExpenseForm } from "../features/expense-edit";
 import { SessionContext } from "../context/SessionContext";
 import { useContext, useState } from "react";
 
-const EditExpenses = ({getExpenses, getCategories}) => {
+const EditExpenses = ({ getExpenses, getCategories }) => {
   const [update, setUpdate] = useState(false);
   const session = useContext(SessionContext);
 
@@ -18,7 +18,11 @@ const EditExpenses = ({getExpenses, getCategories}) => {
         update={update}
         updateExpenses={updateExpenses}
       />
-      <ExpenseForm session={session} getCategories={getCategories} getExpenses={getExpenses} />
+      <ExpenseForm
+        session={session}
+        getCategories={getCategories}
+        getExpenses={getExpenses}
+      />
     </>
   );
 };

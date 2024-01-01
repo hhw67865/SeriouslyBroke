@@ -2,7 +2,12 @@ import { useState } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 
-const AddCategoryForm = ({session, getCategories, setErrors, setShowForm}) => {
+const AddCategoryForm = ({
+  session,
+  getCategories,
+  setErrors,
+  setShowForm,
+}) => {
   const [name, setName] = useState("");
 
   const handleForm = (e) => {
@@ -52,5 +57,5 @@ const AddCategoryForm = ({session, getCategories, setErrors, setShowForm}) => {
       </form>
     </div>
   );
-}
+};
 export default AddCategoryForm;

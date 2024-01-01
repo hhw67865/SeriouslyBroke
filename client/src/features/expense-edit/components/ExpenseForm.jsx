@@ -93,10 +93,10 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
               >
                 <option value="">Select a category</option>
                 {getCategories.data.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex w-1/3 flex-col">

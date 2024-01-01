@@ -16,16 +16,16 @@ function App() {
     <div className="flex flex-col">
       <main className="mb-10 mt-auto min-h-screen flex-grow">
         {!isSignedIn ? (
-            <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
-          ) : (
-            <LoginCheck session={session}/>
-          )}
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        ) : (
+          <LoginCheck session={session} />
+        )}
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
 export default App;

@@ -3,17 +3,18 @@ import Errors from "../../../components/errors/Errors";
 import CategorySelectionCard from "./CategorySelectionCard";
 import AddCategoryForm from "./AddCategoryForm";
 
-
-const CategorySelectionContainer = ({getCategories, setCategoryId, session }) => {
+const CategorySelectionContainer = ({
+  getCategories,
+  setCategoryId,
+  session,
+}) => {
   const [showForm, setShowForm] = useState(false);
   const [errors, setErrors] = useState(null);
 
   return (
     <>
       <div className="mb-4">
-        <h1 className="text-xl font-bold">
-          Categories
-        </h1>
+        <h1 className="text-xl font-bold">Categories</h1>
       </div>
       <div className="grid grid-cols-1 gap-4">
         {getCategories.data.map((category) => (
@@ -45,5 +46,5 @@ const CategorySelectionContainer = ({getCategories, setCategoryId, session }) =>
       </div>
     </>
   );
-}
+};
 export default CategorySelectionContainer;

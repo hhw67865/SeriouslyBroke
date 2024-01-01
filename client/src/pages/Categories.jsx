@@ -1,8 +1,11 @@
 import { SessionContext } from "../context/SessionContext";
 import { useContext, useState } from "react";
-import { CategoryContainer, CategorySelectionContainer } from "../features/category";
+import {
+  CategoryContainer,
+  CategorySelectionContainer,
+} from "../features/category";
 
-const Categories = ({getCategories}) => {
+const Categories = ({ getCategories }) => {
   const session = useContext(SessionContext);
   const [categoryId, setCategoryId] = useState(null);
 
@@ -24,5 +27,5 @@ const Categories = ({getCategories}) => {
       </div>
     </div>
   );
-}
+};
 export default Categories;
