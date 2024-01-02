@@ -3,7 +3,7 @@
  set -o errexit
 
  cd client
- bun install && bun run build
+ npm install --prefix client && npm run build --prefix client
  cd ..
 
  bundle install
