@@ -32,7 +32,7 @@ const Data = ({ session }) => {
     ).then((res) => {
       setGraphData(res.data);
     });
-  }, [months, getPaychecks.data]);
+  }, [months, getPaychecks.data, session]);
 
   return (
     <SessionContext.Provider value={session}>

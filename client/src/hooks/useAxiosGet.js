@@ -24,7 +24,7 @@ const useAxiosGet = (url, session) => {
       .catch((err) => {
         setError(formatAxiosErrors(err));
       });
-  }, [update]);
+  }, [update, session]);
 
   return { data, error, updateData };
 };
