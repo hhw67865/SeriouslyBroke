@@ -79,6 +79,5 @@ test:
 #
 production:
   <<: *default
-  database: moneyhugs_production
-  username: moneyhugs
-  password: <%= ENV["MONEYHUGS_DATABASE_PASSWORD"] %>
+    url: <%= ENV['DATABASE_URL'] %>
+
