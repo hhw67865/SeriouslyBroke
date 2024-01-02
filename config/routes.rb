@@ -25,4 +25,5 @@ Rails.application.routes.draw do
     # Defines the root path route ("/")
     # root "posts#index"
   end
+  get "*path", to: "fallback#index", constraints: ->(req) { !req.xhr? && req.format.html? }
 end
