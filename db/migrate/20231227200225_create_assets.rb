@@ -1,8 +1,8 @@
 class CreateAssets < ActiveRecord::Migration[7.1]
   def change
-    create_table :assets, id: :uuid do |t|
+    create_table :assets do |t|
       t.string :name
-      t.belongs_to :asset_type, null: false, foreign_key: true, type: :uuid
+      t.belongs_to :asset_type, null: false, foreign_key: true
 
       t.timestamps
     end

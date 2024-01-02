@@ -12,91 +12,90 @@
 
 ActiveRecord::Schema[7.1].define(version: 2023_12_27_200548) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "asset_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "asset_transactions", force: :cascade do |t|
     t.date "date"
     t.money "amount", scale: 2
     t.text "description"
-    t.uuid "asset_id", null: false
+    t.bigint "asset_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_id"], name: "index_asset_transactions_on_asset_id"
   end
 
-  create_table "asset_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "asset_types", force: :cascade do |t|
     t.string "name"
-    t.uuid "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_asset_types_on_user_id"
   end
 
-  create_table "assets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "assets", force: :cascade do |t|
     t.string "name"
-    t.uuid "asset_type_id", null: false
+    t.bigint "asset_type_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_type_id"], name: "index_assets_on_asset_type_id"
   end
 
-  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "categories", force: :cascade do |t|
     t.string "name"
     t.money "minimum_amount", scale: 2
     t.string "color"
-    t.uuid "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
-  create_table "expenses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "expenses", force: :cascade do |t|
     t.string "name"
     t.money "amount", scale: 2
     t.date "date"
-    t.uuid "category_id", null: false
+    t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_expenses_on_category_id"
   end
 
-  create_table "income_sources", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "income_sources", force: :cascade do |t|
     t.string "name"
-    t.uuid "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_income_sources_on_user_id"
   end
 
-  create_table "paychecks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "paychecks", force: :cascade do |t|
     t.date "date"
     t.money "amount", scale: 2
-    t.uuid "income_source_id", null: false
+    t.bigint "income_source_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["income_source_id"], name: "index_paychecks_on_income_source_id"
   end
 
-  create_table "tasks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "tasks", force: :cascade do |t|
     t.text "description"
     t.boolean "completed"
-    t.uuid "upgrade_id", null: false
+    t.bigint "upgrade_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["upgrade_id"], name: "index_tasks_on_upgrade_id"
   end
 
-  create_table "upgrades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "upgrades", force: :cascade do |t|
     t.money "potential_income", scale: 2
     t.money "minimum_downpayment", scale: 2
-    t.uuid "income_source_id", null: false
+    t.bigint "income_source_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["income_source_id"], name: "index_upgrades_on_income_source_id"
   end
 
-  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "clerk_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
