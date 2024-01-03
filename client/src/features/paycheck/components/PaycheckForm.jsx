@@ -10,6 +10,7 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
     date: "",
     income_source_id: "",
     amount: 0,
+    description: "",
   });
 
   function handleFormChange(e) {
@@ -95,6 +96,20 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             name="amount"
             value={formData.amount}
+            onChange={handleFormChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            className="mb-2 block text-sm font-bold text-gray-700"
+            htmlFor="description"
+          >
+            Description:
+          </label>
+          <input
+            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+            name="description"
+            value={formData.description}
             onChange={handleFormChange}
           />
         </div>

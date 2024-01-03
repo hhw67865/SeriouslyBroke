@@ -76,6 +76,9 @@ const PaycheckTable = ({ getPaychecks, session }) => {
               <TableCell>
                 <h1 className="font-bold">Source</h1>
               </TableCell>
+              <TableCell>
+                <h1 className="font-bold">Description</h1>
+              </TableCell>
               <TableCell align="right">
                 <h1 className="font-bold">Amount</h1>
               </TableCell>
@@ -89,6 +92,7 @@ const PaycheckTable = ({ getPaychecks, session }) => {
                 <TableRow key={paycheck.id}>
                   <TableCell>{paycheck.date}</TableCell>
                   <TableCell>{paycheck.income_source.name}</TableCell>
+                  <TableCell>{paycheck.description}</TableCell>
                   <TableCell align="right">
                     {formatMoney(paycheck.amount)}
                   </TableCell>
