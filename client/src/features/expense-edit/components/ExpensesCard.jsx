@@ -1,6 +1,8 @@
 import { useState } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatMoney from "../../../utils/moneyFormatter";
+import Errors from "../../../components/errors/Errors";
+import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 
 const ExpensesCard = ({
   editingExpenseId,
@@ -9,6 +11,7 @@ const ExpensesCard = ({
   session,
   getExpenses,
 }) => {
+  const [errors, setErrors] = useState(null);
   const [showButtons, setShowButtons] = useState(false);
   const [editExpense, setEditExpense] = useState({
     name: "",
@@ -42,7 +45,7 @@ const ExpensesCard = ({
         setEditExpense({ name: "", amount: "" });
         getExpenses.updateData();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => setErrors(formatAxiosErrors(err)));
   }
 
   return (
@@ -110,6 +113,7 @@ const ExpensesCard = ({
           </button>
         </div>
       )}
+      <Errors errors={errors} />
     </div>
   );
 };
