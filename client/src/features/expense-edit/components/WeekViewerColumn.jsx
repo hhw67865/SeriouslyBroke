@@ -9,11 +9,14 @@ const WeekViewerColumn = ({
   setEditingExpenseId,
   getExpenses,
 }) => {
+
+  const sortedExpenses = [...dailyExpenses].sort((a, b) => a.category.id - b.category.id);
+
   return (
     <div className="divide-y divide-gray-200 rounded-md border border-gray-200 p-2 shadow-sm">
       <h2 className="text-l mb-2 font-bold">{formattedDate}</h2>
       <div className="flex max-h-[300px] min-h-[300px] flex-col space-y-2 overflow-auto whitespace-normal break-words py-2">
-        {dailyExpenses.map((expense, key) => (
+        {sortedExpenses.map((expense, key) => (
           <ExpensesCard
             key={key}
             editingExpenseId={editingExpenseId}

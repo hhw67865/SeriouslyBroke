@@ -2,7 +2,7 @@ const CategorySelectionCard = ({ setCategoryId, category }) => {
   return (
     <div
       onClick={() => setCategoryId(category.id)}
-      className="rounded border-2 bg-white p-4 shadow hover:border-secondary hover:shadow-md"
+      className="rounded border-4 bg-white p-4 shadow hover:border-secondary hover:shadow-md"
       style={{ borderColor: category.color }}
     >
       <h2 className="mb-2 text-lg font-semibold">{category.name}</h2>
