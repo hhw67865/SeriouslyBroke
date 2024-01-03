@@ -9,7 +9,7 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
   const [formData, setFormData] = useState({
     date: "",
     income_source_id: "",
-    amount: 0,
+    amount: "",
     description: "",
   });
 
@@ -68,6 +68,7 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
             Date:
           </label>
           <input
+            required
             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             type="date"
             name="date"
@@ -78,6 +79,7 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
         <div className="mb-6">
           <CreatableSelect
             isClearable
+            required
             options={getIncomeSources.data.map((incomeSource) => ({
               label: incomeSource.name,
               value: incomeSource.id,
@@ -95,6 +97,7 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
           <input
             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             name="amount"
+            required
             value={formData.amount}
             onChange={handleFormChange}
           />
