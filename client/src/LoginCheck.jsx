@@ -7,6 +7,11 @@ const LoginCheck = ({ session }) => {
   useEffect(() => {
     fetchAxios({ method: "GET", url: "/api/users" }, session).then(() => {
       setSignedIn(true);
+    })
+    .catch((err) => {
+      console.log(err);
+      setSignedIn(false);
+      console.log("failed to signin")
     });
   }, [session]);
   return <>{signedIn && <Data session={session} />}</>;
