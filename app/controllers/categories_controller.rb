@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: %i[ show update destroy ]
+  before_action :reassign_children, only: [:destroy]
 
   # GET /categories
   def index
@@ -47,5 +48,11 @@ class CategoriesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def category_params
       params.require(:category).permit(:name, :minimum_amount, :color)
+    end
+
+    def reassign_children
+      return unless params[:category_id]
+
+      @category.expenses.update_all(category_id: params[:category_id])
     end
 end

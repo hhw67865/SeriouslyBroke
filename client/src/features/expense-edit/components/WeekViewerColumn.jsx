@@ -9,8 +9,9 @@ const WeekViewerColumn = ({
   setEditingExpenseId,
   getExpenses,
 }) => {
-
-  const sortedExpenses = [...dailyExpenses].sort((a, b) => a.category.id - b.category.id);
+  const sortedExpenses = [...dailyExpenses].sort(
+    (a, b) => a.category.id - b.category.id,
+  );
 
   return (
     <div className="divide-y divide-gray-200 rounded-md border border-gray-200 p-2 shadow-sm">

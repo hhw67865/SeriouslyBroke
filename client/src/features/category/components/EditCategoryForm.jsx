@@ -10,7 +10,7 @@ const EditCategoryForm = ({
   session,
   setShowForm,
   getCategories,
-  getExpenses
+  getExpenses,
 }) => {
   const [hsva, setHsva] = useState({ h: 214, s: 43, v: 90, a: 1 });
   const [minimum_amount, setMinimumAmount] = useState(() =>

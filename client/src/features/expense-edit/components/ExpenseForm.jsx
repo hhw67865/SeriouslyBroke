@@ -45,6 +45,7 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
       .then(() => {
         setExpenses([{ name: "", category_id: "", amount: "" }]);
         getExpenses.updateData();
+        getCategories.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };

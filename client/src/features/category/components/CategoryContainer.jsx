@@ -1,8 +1,16 @@
 import { useState } from "react";
 import EditCategoryForm from "./EditCategoryForm";
 
-const CategoryContainer = ({ categoryId, session, getCategories, getExpenses }) => {
+import DeleteCategoryForm from "./DeleteCategoryForm";
+
+const CategoryContainer = ({
+  categoryId,
+  session,
+  getCategories,
+  getExpenses,
+}) => {
   const [showForm, setShowForm] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const category = getCategories.data?.find(
     (category) => category.id === categoryId,
@@ -33,8 +41,8 @@ const CategoryContainer = ({ categoryId, session, getCategories, getExpenses }) 
                     </button>
                   </div>
 
-                  <div>
-                    <p className="mt-2 text-gray-500">
+                  <div className="flex flex-col">
+                    <p className="my-2 text-gray-500">
                       <span className="font-bold">Previous Month Total:</span>{" "}
                       {category.last_month_total}
                     </p>
@@ -50,6 +58,12 @@ const CategoryContainer = ({ categoryId, session, getCategories, getExpenses }) 
                         ? category.minimum_amount
                         : "No budget set yet."}
                     </p>
+                    <button
+                      onClick={() => setShowDeleteDialog(true)}
+                      className="self-end rounded bg-white px-4 py-2 font-bold text-tertiary-dark hover:bg-gray-200"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </>
               ) : (
@@ -71,6 +85,16 @@ const CategoryContainer = ({ categoryId, session, getCategories, getExpenses }) 
             Please select a Category from the list on the left.
           </p>
         </div>
+      )}
+      {showDeleteDialog && (
+        <DeleteCategoryForm
+          session={session}
+          setShowDeleteDialog={setShowDeleteDialog}
+          category={category}
+          getCategories={getCategories}
+          getExpenses={getExpenses}
+          categoryId={categoryId}
+        />
       )}
     </>
   );
