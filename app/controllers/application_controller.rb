@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 
   def authenticate_user!
     clerk = Clerk::SDK.new
-    session = clerk.sessions.find(params[:session_id])
+    session = clerk.sessions.find(request.headers["clerk"])
     if session && session["status"] == "active"
       @current_user = User.find_or_create_by(clerk_user_id: session["user_id"])
     else
