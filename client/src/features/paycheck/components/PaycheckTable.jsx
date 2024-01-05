@@ -46,15 +46,11 @@ const PaycheckTable = ({ getPaychecks, session }) => {
       : 0;
 
   const handleDelete = (id) => {
-    fetchAxios(
-      {
-        method: "DELETE",
-        url: `/api/paychecks/${id}`,
+    fetchAxios({ method: "DELETE", url: `/api/paychecks/${id}` }, session).then(
+      () => {
+        getPaychecks.updateData();
       },
-      session,
-    ).then(() => {
-      getPaychecks.updateData();
-    });
+    );
   };
 
   return (

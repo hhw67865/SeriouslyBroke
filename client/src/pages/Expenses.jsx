@@ -1,27 +1,31 @@
 import { Link } from "react-router-dom";
+import { WeekViewer, ExpenseForm } from "../features/expense-edit";
+import { SessionContext } from "../context/SessionContext";
+import { useContext } from "react";
 
-const Expenses = () => {
+
+const Expenses = ({ getExpenses, getCategories }) => {
+  const session = useContext(SessionContext);
+
   return (
-    <>
+    <div className="flex w-full flex-col items-center">
       <Link
         to="/expenses/categories"
-        className="focus:shadow-outline mx-auto mt-4 w-full max-w-xs rounded bg-secondary px-4 py-2 text-center font-bold text-white hover:bg-primary focus:outline-none"
+        className="focus:shadow-outline mx-auto mt-4 max-w-xs rounded px-4 py-2 text-center font-bold text-white hover:underline focus:outline-none"
       >
         Edit Categories/Budget
       </Link>
-      <h1> Total Expenses: $$$/Month </h1>
-      <h1> Estimated minimum: $$$/Month </h1>
-      <Link
-        to="/expenses/edit"
-        className="focus:shadow-outline mx-auto mt-4 w-full max-w-xs rounded bg-secondary px-4 py-2 text-center font-bold text-white hover:bg-primary focus:outline-none"
-      >
-        Expenses
-      </Link>
+      <WeekViewer
+        session={session}
+        getExpenses={getExpenses}
+      />
+      <ExpenseForm
+        session={session}
+        getCategories={getCategories}
+        getExpenses={getExpenses}
+      />
 
-      <h1>Piechart of expenses</h1>
-      <h1>You are up $$$ or down $$$ from last month</h1>
-      <h1>Edit expenses</h1>
-    </>
+    </div>
   );
 };
 export default Expenses;

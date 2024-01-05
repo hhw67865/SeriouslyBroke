@@ -12,7 +12,7 @@ const Paycheck = ({ getPaychecks, getIncomeSources }) => {
         getPaychecks={getPaychecks}
         getIncomeSources={getIncomeSources}
       />
-      <PaycheckTable getPaychecks={getPaychecks} />
+      <PaycheckTable getPaychecks={getPaychecks} session={session} />
     </>
   );
 };
