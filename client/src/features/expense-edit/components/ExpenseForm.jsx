@@ -50,6 +50,14 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };
 
+  const sortedCategories = getCategories.data?.sort((a, b) =>{
+    if (a.name < b.name) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
+
   return (
     <div className="mt-6 rounded-md bg-gray-100 p-6 shadow-md">
       <h2 className="mb-4 text-center text-2xl font-semibold text-gray-700">
@@ -93,7 +101,7 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
                 className="rounded border p-2"
               >
                 <option value="">Select a category</option>
-                {getCategories.data.map((category) => (
+                {sortedCategories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
                   </option>

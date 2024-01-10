@@ -2,6 +2,7 @@ import { useState } from "react";
 import EditCategoryForm from "./EditCategoryForm";
 
 import DeleteCategoryForm from "./DeleteCategoryForm";
+import formatMoney from "../../../utils/moneyFormatter";
 
 const CategoryContainer = ({
   categoryId,
@@ -43,19 +44,23 @@ const CategoryContainer = ({
 
                   <div className="flex flex-col">
                     <p className="my-2 text-gray-500">
+                      <span className="font-bold">Current Month Total:</span>{" "}
+                      {formatMoney(category.current_month_total)}
+                    </p>
+                    <p className="my-2 text-gray-500">
                       <span className="font-bold">Previous Month Total:</span>{" "}
-                      {category.last_month_total}
+                      {formatMoney(category.last_month_total)}
                     </p>
                     <p className="mt-2 text-gray-500">
                       <span className="font-bold">
                         Three Month Average Total:
                       </span>{" "}
-                      {category.last_three_month_average}
+                      {formatMoney(category.last_three_month_average)}
                     </p>
                     <p className="mt-2">
                       <span className="text-lg font-bold">Budget:</span>{" "}
                       {category.minimum_amount
-                        ? category.minimum_amount
+                        ? formatMoney(category.minimum_amount)
                         : "No budget set yet."}
                     </p>
                     <button
