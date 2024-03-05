@@ -1,30 +1,60 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { WeekViewer, ExpenseForm } from "../features/expense-edit";
 import { SessionContext } from "../context/SessionContext";
 import { useContext } from "react";
+import { InformationContainer } from "../features/weekly-expense-info";
 
 
 const Expenses = ({ getExpenses, getCategories }) => {
   const session = useContext(SessionContext);
 
+  const [currentWeek, setCurrentWeek] = useState(() => {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    return startOfDay.getTime();
+  });
+
+  const startOfWeek = new Date(currentWeek);
+  let dayOfWeek = startOfWeek.getDay();
+  dayOfWeek = (dayOfWeek === 0 ? 7 : dayOfWeek) - 1; // Adjust for Monday start
+  startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek);
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+
+  const weeklyExpenses = getExpenses.data.filter((expense) => {
+    const dateParts = expense.date.split("-");
+    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    return date >= startOfWeek && date <= endOfWeek;
+  })
+
   return (
     <div className="flex w-full flex-col items-center">
       <Link
         to="/expenses/categories"
-        className="focus:shadow-outline mx-auto mt-4 max-w-xs rounded px-4 py-2 text-center font-bold text-white hover:underline focus:outline-none"
+        className="focus:shadow-outline mx-auto mt-4 rounded w-[90%] text-end px-4 py-2 font-bold text-white hover:underline focus:outline-none"
       >
         Edit Categories/Budget
       </Link>
       <WeekViewer
         session={session}
         getExpenses={getExpenses}
+        startOfWeek={startOfWeek}
+        endOfWeek={endOfWeek}
+        currentWeek={currentWeek}
+        setCurrentWeek={setCurrentWeek}
+        weeklyExpenses={weeklyExpenses}
       />
-      <ExpenseForm
-        session={session}
-        getCategories={getCategories}
-        getExpenses={getExpenses}
-      />
-
+      <div className="flex flex-col md:flex-row place-content-between container gap-10">
+        <ExpenseForm
+          session={session}
+          getCategories={getCategories}
+          getExpenses={getExpenses}
+        />
+        <InformationContainer weeklyExpenses={weeklyExpenses}/>
+      </div>
     </div>
   );
 };

@@ -24,3 +24,7 @@
 .active {
   color: #5f741d;
 }
+
+* {
+  min-width: 0;
+}
