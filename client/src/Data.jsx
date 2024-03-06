@@ -39,8 +39,15 @@ const Data = ({ session }) => {
       <div className="mt-40 flex w-full flex-grow flex-col items-center">
         <Routes>
           <Route path="/" element={<Summary />} />
-          <Route path="/expenses" element={<Expenses getExpenses={getExpenses}
-                getCategories={getCategories}/>} />
+          <Route
+            path="/expenses"
+            element={
+              <Expenses
+                getExpenses={getExpenses}
+                getCategories={getCategories}
+              />
+            }
+          />
           <Route
             path="/expenses/categories"
             element={

@@ -3,8 +3,15 @@ import WeekSelector from "./WeekSelector";
 import WeekViewerColumn from "./WeekViewerColumn";
 import WeeklyTotal from "./WeeklyTotal";
 
-const WeekViewer = ({ session, getExpenses, startOfWeek, endOfWeek, currentWeek, setCurrentWeek, weeklyExpenses }) => {
-
+const WeekViewer = ({
+  session,
+  getExpenses,
+  startOfWeek,
+  endOfWeek,
+  currentWeek,
+  setCurrentWeek,
+  weeklyExpenses,
+}) => {
   const [editingExpenseId, setEditingExpenseId] = useState(null);
 
   const weekColumns = Array.from({ length: 7 }, (_, i) => {
@@ -40,10 +47,8 @@ const WeekViewer = ({ session, getExpenses, startOfWeek, endOfWeek, currentWeek,
         currentWeek={currentWeek}
         setCurrentWeek={setCurrentWeek}
       />
-      <div className="mt-6 grid grid-cols-7 gap-1">
-        {weekColumns}
-      </div>
-      <WeeklyTotal weeklyExpenses={weeklyExpenses}/>
+      <div className="mt-6 grid grid-cols-7 gap-1">{weekColumns}</div>
+      <WeeklyTotal weeklyExpenses={weeklyExpenses} />
     </div>
   );
 };

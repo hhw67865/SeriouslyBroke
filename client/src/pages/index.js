@@ -6,12 +6,4 @@ import Paycheck from "./Paycheck";
 import Assets from "./Assets";
 import Categories from "./Categories";
 
-export {
-  Expenses,
-  Home,
-  Income,
-  Summary,
-  Paycheck,
-  Assets,
-  Categories,
-};
+export { Expenses, Home, Income, Summary, Paycheck, Assets, Categories };

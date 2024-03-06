@@ -50,7 +50,7 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };
 
-  const sortedCategories = getCategories.data?.sort((a, b) =>{
+  const sortedCategories = getCategories.data?.sort((a, b) => {
     if (a.name < b.name) {
       return -1;
     } else {

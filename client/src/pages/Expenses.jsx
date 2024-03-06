@@ -5,7 +5,6 @@ import { SessionContext } from "../context/SessionContext";
 import { useContext } from "react";
 import { InformationContainer } from "../features/weekly-expense-info";
 
-
 const Expenses = ({ getExpenses, getCategories }) => {
   const session = useContext(SessionContext);
 
@@ -23,18 +22,17 @@ const Expenses = ({ getExpenses, getCategories }) => {
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(endOfWeek.getDate() + 6);
 
-
   const weeklyExpenses = getExpenses.data.filter((expense) => {
     const dateParts = expense.date.split("-");
     const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     return date >= startOfWeek && date <= endOfWeek;
-  })
+  });
 
   return (
     <div className="flex w-full flex-col items-center">
       <Link
         to="/expenses/categories"
-        className="focus:shadow-outline mx-auto mt-4 rounded w-[90%] text-end px-4 py-2 font-bold text-white hover:underline focus:outline-none"
+        className="focus:shadow-outline mx-auto mt-4 w-[90%] rounded px-4 py-2 text-end font-bold text-white hover:underline focus:outline-none"
       >
         Edit Categories/Budget
       </Link>
@@ -47,13 +45,13 @@ const Expenses = ({ getExpenses, getCategories }) => {
         setCurrentWeek={setCurrentWeek}
         weeklyExpenses={weeklyExpenses}
       />
-      <div className="flex flex-col md:flex-row place-content-between container gap-10">
+      <div className="container flex flex-col place-content-between gap-10 md:flex-row">
         <ExpenseForm
           session={session}
           getCategories={getCategories}
           getExpenses={getExpenses}
         />
-        <InformationContainer weeklyExpenses={weeklyExpenses}/>
+        <InformationContainer weeklyExpenses={weeklyExpenses} />
       </div>
     </div>
   );
