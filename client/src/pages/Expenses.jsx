@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { WeekViewer, ExpenseForm } from "../features/expense-edit";
 import { SessionContext } from "../context/SessionContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { InformationContainer } from "../features/weekly-expense-info";
 
 const Expenses = ({ getExpenses, getCategories }) => {
