@@ -47,7 +47,13 @@ const Data = ({ session }) => {
     ).then((res) => {
       setSummary(res.data);
     });
-  }, [summaryMonth, getExpenses.data, getCategories.data, getPaychecks.data, getIncomeSources.data]);
+  }, [
+    summaryMonth,
+    getExpenses.data,
+    getCategories.data,
+    getPaychecks.data,
+    getIncomeSources.data,
+  ]);
 
   return (
     <SessionContext.Provider value={session}>

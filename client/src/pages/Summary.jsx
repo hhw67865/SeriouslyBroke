@@ -20,14 +20,20 @@ const MonthNavigation = ({ summaryMonth, setSummaryMonth }) => {
 
   return (
     <div className="flex items-center justify-between text-gray-700">
-      <button className="text-4xl font-extrabold" onClick={() => changeMonth(-1)}>
+      <button
+        className="text-4xl font-extrabold"
+        onClick={() => changeMonth(-1)}
+      >
         &#8592;
       </button>
       <div className="text-2xl font-extrabold">
         {summaryMonth.toLocaleString("default", { month: "long" })}{" "}
         {summaryMonth.getFullYear()}
       </div>
-      <button className="text-4xl font-extrabold" onClick={() => changeMonth(1)}>
+      <button
+        className="text-4xl font-extrabold"
+        onClick={() => changeMonth(1)}
+      >
         &#8594;
       </button>
     </div>
@@ -43,7 +49,7 @@ const SummaryStatus = ({ summary }) => {
 
   return (
     <div className="p-4">
-      <div className="font-bold text-gray-700 mb-5">{summary.status}</div>
+      <div className="mb-5 font-bold text-gray-700">{summary.status}</div>
       <div className="text-gray-600">
         <p>
           {summary.current_month
@@ -62,17 +68,20 @@ const SummaryStatus = ({ summary }) => {
           {exceedingCategories &&
             `Categories that went over budget are: ${exceedingCategories}`}
         </p>
-        <div className="text-gray-600 mt-4">
-          {setupBudgetCategories &&
+        <div className="mt-4 text-gray-600">
+          {setupBudgetCategories && (
             <>
-              <p>You still need to setup budgets for these categories: {setupBudgetCategories}</p>
+              <p>
+                You still need to setup budgets for these categories:{" "}
+                {setupBudgetCategories}
+              </p>
               <Link to="/expenses/categories">
-                <button className="text-secondary hover:underline mt-4">
+                <button className="mt-4 text-secondary hover:underline">
                   Setup My Budgets
                 </button>
               </Link>
             </>
-          }
+          )}
         </div>
       </div>
     </div>
@@ -89,18 +98,12 @@ const SummaryChart = ({ summary }) => (
           domain={[
             0,
             Math.ceil(
-              Math.max(summary.total_budget, summary.total_expenses) /
-                100,
+              Math.max(summary.total_budget, summary.total_expenses) / 100,
             ) * 100,
           ]}
         />
         <Line type="monotone" dataKey="total" stroke="red" dot={false} />
-        <Line
-          type="monotone"
-          dataKey="budget"
-          stroke="#5F741D"
-          dot={false}
-        />
+        <Line type="monotone" dataKey="budget" stroke="#5F741D" dot={false} />
         <Tooltip />
         <Legend />
       </LineChart>
@@ -111,25 +114,34 @@ const SummaryChart = ({ summary }) => (
 const Summary = ({ summary, summaryMonth, setSummaryMonth }) => {
   return (
     <div className="container mx-auto px-4">
-      <div className="sticky top-24 z-50 mx-auto grid max-w-md grid-cols-1 gap-4 overflow-hidden rounded-lg shadow-lg bg-gray-100 p-4">
-        <MonthNavigation summaryMonth={summaryMonth} setSummaryMonth={setSummaryMonth} />
+      <div className="sticky top-24 z-50 mx-auto grid max-w-md grid-cols-1 gap-4 overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg">
+        <MonthNavigation
+          summaryMonth={summaryMonth}
+          setSummaryMonth={setSummaryMonth}
+        />
       </div>
       <div className="mt-8 grid grid-cols-1 gap-4 overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg md:grid-cols-2">
         <SummaryStatus summary={summary} />
         <SummaryChart summary={summary} />
       </div>
       <div className="mt-8 grid grid-cols-1 gap-4 overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg md:grid-cols-3">
-        <div className="p-4 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-4">
           <div className="font-bold text-gray-700">Expenses</div>
-          <div className="text-gray-600">{formatMoney(summary.total_expenses)}</div>
+          <div className="text-gray-600">
+            {formatMoney(summary.total_expenses)}
+          </div>
         </div>
-        <div className="p-4 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-4">
           <div className="font-bold text-gray-700">Net Income</div>
-          <div className="text-gray-600">{formatMoney(summary.total_income - summary.total_expenses)}</div>
+          <div className="text-gray-600">
+            {formatMoney(summary.total_income - summary.total_expenses)}
+          </div>
         </div>
-        <div className="p-4 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-4">
           <div className="font-bold text-gray-700">Income</div>
-          <div className="text-gray-600">{formatMoney(summary.total_income)}</div>
+          <div className="text-gray-600">
+            {formatMoney(summary.total_income)}
+          </div>
         </div>
       </div>
     </div>
