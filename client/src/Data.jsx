@@ -16,6 +16,8 @@ import fetchAxios from "./lib/fetchAxios";
 const Data = ({ session }) => {
   const [graphData, setGraphData] = useState(null);
   const [months, setMonths] = useState(6);
+  const [summaryMonth, setSummaryMonth] = useState(new Date());
+  const [summary, setSummary] = useState(null);
 
   const getTransactions = useAxiosGet("/api/asset_transactions", session);
   const getAssetTypes = useAxiosGet("/api/asset_types", session);
@@ -33,14 +35,52 @@ const Data = ({ session }) => {
     });
   }, [months, getPaychecks.data]);
 
+  useEffect(() => {
+    const month = summaryMonth.getMonth() + 1;
+    fetchAxios(
+      {
+        method: "GET",
+        url: "/api/monthly_summary",
+        params: { month: month, year: summaryMonth.getFullYear() },
+      },
+      session,
+    ).then((res) => {
+      setSummary(res.data);
+    });
+  }, [
+    summaryMonth,
+    getExpenses.data,
+    getCategories.data,
+    getPaychecks.data,
+    getIncomeSources.data,
+  ]);
+
   return (
     <SessionContext.Provider value={session}>
       <Navbar />
       <div className="mt-40 flex w-full flex-grow flex-col items-center">
         <Routes>
-          <Route path="/" element={<Summary />} />
-          <Route path="/expenses" element={<Expenses getExpenses={getExpenses}
-                getCategories={getCategories}/>} />
+          <Route
+            path="/"
+            element={
+              summary === null ? null : (
+                <Summary
+                  summary={summary}
+                  summaryMonth={summaryMonth}
+                  setSummaryMonth={setSummaryMonth}
+                />
+              )
+            }
+          />
+          <Route
+            path="/expenses"
+            element={
+              <Expenses
+                getExpenses={getExpenses}
+                getCategories={getCategories}
+              />
+            }
+          />
           <Route
             path="/expenses/categories"
             element={

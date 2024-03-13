@@ -32,4 +32,22 @@ class User < ApplicationRecord
       end
     )
   end
+
+  def total_budget(month, year)
+    categories.sum(:minimum_amount)
+  end
+
+  def total_expenses(month, year)
+    expenses.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
+  end
+
+  def total_income(month, year)
+    paychecks.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
+  end
+
+  def exceeding_categories(month, year)
+    categories.select do |category|
+      category.total_expense(month, year) > category.minimum_amount && category.minimum_amount > 0
+    end
+  end
 end

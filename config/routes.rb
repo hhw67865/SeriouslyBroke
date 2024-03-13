@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         resources :asset_transactions
     resources :assets
     resources :asset_types
+    get 'monthly_summary', to: 'summary#monthly_summary'
     get 'graph_data', to: 'users#graph_data'
     get 'yearly_average_income', to: 'users#yearly_average_income'
     resources :users, only: [:index]

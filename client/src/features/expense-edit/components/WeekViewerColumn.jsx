@@ -34,7 +34,7 @@ const WeekViewerColumn = ({
           dailyExpenses.reduce(
             (total, expense) => total + parseFloat(expense.amount),
             0,
-          )
+          ),
         )}
       </div>
     </div>
