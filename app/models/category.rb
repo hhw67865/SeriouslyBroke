@@ -4,6 +4,16 @@ class Category < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :user_id }
 
+  def minimum_amount
+    super || 0
+  end
+
+  def total_expense(month, year)
+    start_date = Date.new(year, month, 1)
+    end_date = start_date.end_of_month
+    expenses.where(date: start_date..end_date).sum(:amount)
+  end
+
   def last_month_total
     start_date = Date.today.months_ago(1).beginning_of_month
     end_date = Date.today.months_ago(1).end_of_month

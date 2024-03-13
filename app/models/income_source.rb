@@ -5,4 +5,8 @@ class IncomeSource < ApplicationRecord
   has_one :assets, dependent: :destroy
 
   validates :name, presence: true
+
+  def total_income(month, year)
+    paychecks.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
+  end
 end

@@ -19,9 +19,6 @@ const InformationContainer = ({ weeklyExpenses }) => {
       color,
     }))
     .sort((a, b) => b.totalExpense - a.totalExpense);
-
-  console.log(weeklyExpenseSummary);
-
   return (
     <div className="mt-6 flex-grow rounded-md bg-gray-100 p-6 shadow-md">
       <div className="mb-4 border-b border-gray-200 pb-2">
