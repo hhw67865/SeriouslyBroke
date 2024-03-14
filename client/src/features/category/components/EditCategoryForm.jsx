@@ -1,5 +1,5 @@
 import Wheel from "@uiw/react-color-wheel";
-import { hsvaToHex } from "@uiw/color-convert";
+import { hsvaToHex, hexToHsva } from "@uiw/color-convert";
 import { useState } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import Errors from "../../../components/errors/Errors";
@@ -12,7 +12,7 @@ const EditCategoryForm = ({
   getCategories,
   getExpenses,
 }) => {
-  const [hsva, setHsva] = useState(category.color);
+  const [hsva, setHsva] = useState(hexToHsva(category.color));
   const [minimum_amount, setMinimumAmount] = useState(() =>
     category.minimum_amount ? category.minimum_amount : 0,
   );
@@ -62,6 +62,7 @@ const EditCategoryForm = ({
             color={hsva}
             onChange={(color) => setHsva({ ...hsva, ...color.hsva })}
           />
+          <button onClick={()=>setHsva({ h: 214, s: 43, v: 90, a: 1 })}>Reset Color</button>
         </div>
         <div className="flex flex-col">
           <label htmlFor="minimum_amount" className="mb-1">
