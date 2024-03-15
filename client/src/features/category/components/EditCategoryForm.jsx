@@ -12,7 +12,7 @@ const EditCategoryForm = ({
   getCategories,
   getExpenses,
 }) => {
-  const [hsva, setHsva] = useState(hexToHsva(category.color));
+  const [hsva, setHsva] = useState(category.color ? hexToHsva(category.color) : { h: 214, s: 43, v: 90, a: 1 });
   const [minimum_amount, setMinimumAmount] = useState(() =>
     category.minimum_amount ? category.minimum_amount : 0,
   );
