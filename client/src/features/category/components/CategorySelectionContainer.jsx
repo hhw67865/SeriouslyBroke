@@ -16,7 +16,7 @@ const CategorySelectionContainer = ({
       <div className="mb-4">
         <h1 className="text-xl font-bold">Categories</h1>
       </div>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4 overflow-auto max-h-[32rem]">
         {getCategories.data.map((category) => (
           <CategorySelectionCard
             key={category.id}
