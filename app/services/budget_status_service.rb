@@ -20,7 +20,7 @@ class BudgetStatusService
       total_expenses:,
       total_income:,
       exceeding_categories: format_categories,
-      missing_budget_categories: user.categories.where(minimum_amount: 0).pluck(:name),
+      missing_budget_categories: user.categories.where(minimum_amount: [0, nil]).pluck(:name),
       graph_data: total_expenses_by_day,
       expenses_pie: expense_per_category,
       income_pie: income_per_source
