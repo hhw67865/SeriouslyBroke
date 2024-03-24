@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
 
   # GET /categories
   def index
-    @categories = @current_user.categories
+    @categories = @current_user.categories.order('LOWER(name)')
 
     render json: @categories
   end

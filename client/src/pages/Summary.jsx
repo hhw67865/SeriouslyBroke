@@ -49,7 +49,13 @@ const SummaryStatus = ({ summary }) => {
 
   return (
     <div className="p-4">
-      <div className="mb-5 font-bold text-gray-700">{summary.status}</div>
+      <div className="mb-5 font-bold text-gray-700">{summary.status}
+        <p>
+          {parseFloat(summary.current_budget) < parseFloat(summary.total_expenses) ? 
+            `You are ${formatMoney(summary.total_expenses - summary.current_budget)} past your budget.` : 
+            `You are under your budget by ${formatMoney(summary.current_budget - summary.total_expenses)}.`}
+        </p>
+      </div>
       <div className="text-gray-600">
         <p>
           {summary.current_month
@@ -57,13 +63,14 @@ const SummaryStatus = ({ summary }) => {
                 summary.current_budget,
               )}. Your current expenses total to ${formatMoney(
                 summary.total_expenses,
-              )}`
+              )}.`
             : `Your budget is ${formatMoney(
-                summary.total_budget,
+                summary.current_budget,
               )}, your expenses total to ${formatMoney(
                 summary.total_expenses,
               )}.`}
         </p>
+
         <p className="mt-4">
           {exceedingCategories &&
             `Categories that went over budget are: ${exceedingCategories}`}
@@ -83,8 +90,24 @@ const SummaryStatus = ({ summary }) => {
             </>
           )}
         </div>
+        <div className="mt-4 text-gray-600">
+        <div className="mb-5 font-bold text-gray-700">What happened? Take a closer look &#x1F440;</div>
+        <OverBudgetCategoryButton />
+        </div>
       </div>
     </div>
+  );
+};
+
+const OverBudgetCategoryButton = ({ categories }) => {
+  return (
+    <>
+        <button
+          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-secondary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:tertiary"
+        >
+          GROCERYASDASDASD sadasda
+        </button>
+    </>
   );
 };
 

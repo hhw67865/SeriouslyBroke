@@ -19,7 +19,6 @@ const Expenses = ({ getExpenses, getCategories }) => {
   dayOfWeek = (dayOfWeek === 0 ? 7 : dayOfWeek) - 1; // Adjust for Monday start
   startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek);
   startOfWeek.setHours(0, 0, 0, 0); // Set the time to the start of the day to avoid DST issues
-  console.log(startOfWeek)
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(endOfWeek.getDate() + 6);
   endOfWeek.setHours(23, 59, 59, 999); // Set the time to the end of the day to avoid DST issues
