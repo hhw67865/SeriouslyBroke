@@ -22,7 +22,7 @@ const Expenses = ({ getExpenses, getCategories }) => {
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(endOfWeek.getDate() + 6);
   endOfWeek.setHours(23, 59, 59, 999); // Set the time to the end of the day to avoid DST issues
-  
+
   const weeklyExpenses = getExpenses.data.filter((expense) => {
     const dateParts = expense.date.split("-");
     const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);

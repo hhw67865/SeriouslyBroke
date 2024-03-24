@@ -49,11 +49,17 @@ const SummaryStatus = ({ summary }) => {
 
   return (
     <div className="p-4">
-      <div className="mb-5 font-bold text-gray-700">{summary.status}
+      <div className="mb-5 font-bold text-gray-700">
+        {summary.status}
         <p>
-          {parseFloat(summary.current_budget) < parseFloat(summary.total_expenses) ? 
-            `You are ${formatMoney(summary.total_expenses - summary.current_budget)} past your budget.` : 
-            `You are under your budget by ${formatMoney(summary.current_budget - summary.total_expenses)}.`}
+          {parseFloat(summary.current_budget) <
+          parseFloat(summary.total_expenses)
+            ? `You are ${formatMoney(
+                summary.total_expenses - summary.current_budget,
+              )} past your budget.`
+            : `You are under your budget by ${formatMoney(
+                summary.current_budget - summary.total_expenses,
+              )}.`}
         </p>
       </div>
       <div className="text-gray-600">
@@ -91,8 +97,10 @@ const SummaryStatus = ({ summary }) => {
           )}
         </div>
         <div className="mt-4 text-gray-600">
-        <div className="mb-5 font-bold text-gray-700">What happened? Take a closer look &#x1F440;</div>
-        <OverBudgetCategoryButton />
+          <div className="mb-5 font-bold text-gray-700">
+            What happened? Take a closer look &#x1F440;
+          </div>
+          <OverBudgetCategoryButton />
         </div>
       </div>
     </div>
@@ -102,11 +110,9 @@ const SummaryStatus = ({ summary }) => {
 const OverBudgetCategoryButton = ({ categories }) => {
   return (
     <>
-        <button
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-secondary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:tertiary"
-        >
-          GROCERYASDASDASD sadasda
-        </button>
+      <button className="focus:tertiary inline-flex items-center rounded-md border border-transparent bg-secondary px-6 py-3 text-base font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2">
+        GROCERYASDASDASD sadasda
+      </button>
     </>
   );
 };

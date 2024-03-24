@@ -13,9 +13,11 @@ const ExpenseCard = ({ expense }) => (
     <div className="block hover:bg-gray-50">
       <div className="px-4 py-1 sm:px-6">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-indigo-600 truncate">{expense.name}</p>
-          <div className="ml-2 flex-shrink-0 flex">
-            <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+          <p className="truncate text-sm font-medium text-indigo-600">
+            {expense.name}
+          </p>
+          <div className="ml-2 flex flex-shrink-0">
+            <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
               {formatMoney(expense.amount)}
             </p>
           </div>
@@ -32,34 +34,45 @@ const ExpenseCard = ({ expense }) => (
 
 const FillerExpenseCard = () => (
   <div className="opacity-0">
-    <ExpenseCard expense={{ id: 'filler', name: 'filler', amount: 'filler', date: 'filler' }} />
+    <ExpenseCard
+      expense={{
+        id: "filler",
+        name: "filler",
+        amount: "filler",
+        date: "filler",
+      }}
+    />
   </div>
 );
 
 const Filter = ({ isDescending, setIsDescending }) => (
   <div className="flex items-center space-x-2 py-2">
-    <input 
-      type="checkbox" 
-      checked={isDescending} 
-      onChange={() => setIsDescending(!isDescending)} 
-      className="form-checkbox h-4 w-4 text-blue-600" 
+    <input
+      type="checkbox"
+      checked={isDescending}
+      onChange={() => setIsDescending(!isDescending)}
+      className="form-checkbox h-4 w-4 text-blue-600"
     />
-    <label className="text-sm font-light text-gray-700">Order by amount (descending)</label>
+    <label className="text-sm font-light text-gray-700">
+      Order by amount (descending)
+    </label>
   </div>
 );
 
-
 const ExpensesContainer = ({ category }) => {
-  const [month, setMonth] = useState('');
+  const [month, setMonth] = useState("");
   const [year, setYear] = useState(new Date().getFullYear());
   const [currentPage, setCurrentPage] = useState(1);
   const [isDescending, setIsDescending] = useState(false);
   const itemsPerPage = 5;
 
   const filteredExpenses = useMemo(() => {
-    let expenses = category.expenses.filter(expense => {
+    let expenses = category.expenses.filter((expense) => {
       const expenseDateObj = convertDate(expense.date);
-      return (!month || expenseDateObj.month === Number(month)) && (!year || expenseDateObj.year === Number(year));
+      return (
+        (!month || expenseDateObj.month === Number(month)) &&
+        (!year || expenseDateObj.year === Number(year))
+      );
     });
 
     if (isDescending) {
@@ -84,29 +97,38 @@ const ExpensesContainer = ({ category }) => {
         <YearSelector year={year} setYear={setYear} />
         <Filter isDescending={isDescending} setIsDescending={setIsDescending} />
       </div>
-      <h3 className="text-lg font-semibold mb-2">Expenses:</h3>
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+      <h3 className="mb-2 text-lg font-semibold">Expenses:</h3>
+      <div className="overflow-hidden bg-white shadow sm:rounded-md">
         <ul className="divide-y divide-gray-200">
           {currentExpenses.length > 0 ? (
             <>
               {currentExpenses.map((expense) => (
                 <ExpenseCard key={expense.id} expense={expense} />
               ))}
-              {Array(fillerRows).fill().map((_, index) => (                
-                <FillerExpenseCard key={index} />
-              ))}
+              {Array(fillerRows)
+                .fill()
+                .map((_, index) => (
+                  <FillerExpenseCard key={index} />
+                ))}
             </>
           ) : (
-            <li className="px-4 py-4 sm:px-6 text-center text-gray-500">No expenses to display</li>
+            <li className="px-4 py-4 text-center text-gray-500 sm:px-6">
+              No expenses to display
+            </li>
           )}
         </ul>
         {currentExpenses.length > 0 && (
-          <Pagination itemsPerPage={itemsPerPage} data={filteredExpenses} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <Pagination
+            itemsPerPage={itemsPerPage}
+            data={filteredExpenses}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         )}
       </div>
     </div>
   );
-}
+};
 
 const CategoryContainer = ({
   categoryId,
