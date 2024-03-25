@@ -1,4 +1,8 @@
-const MonthSelector = ({ month, setMonth }) => {
+import { useSearchParams } from "react-router-dom";
+
+const MonthSelector = ({ month }) => {
+  const [, setSearchParams] = useSearchParams();
+
   const months = [
     "January",
     "February",
@@ -13,6 +17,16 @@ const MonthSelector = ({ month, setMonth }) => {
     "November",
     "December",
   ];
+
+  const setMonth = (newMonth) => {
+    setSearchParams(
+      (prev) => {
+        prev.set("month", newMonth);
+        return prev;
+      },
+      { replace: true },
+    );
+  };
 
   const handleMonthChange = (event) => {
     setMonth(event.target.value);

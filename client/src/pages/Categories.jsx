@@ -1,5 +1,6 @@
 import { SessionContext } from "../context/SessionContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   CategoryContainer,
   CategorySelectionContainer,
@@ -7,7 +8,6 @@ import {
 
 const Categories = ({ getCategories, getExpenses }) => {
   const session = useContext(SessionContext);
-  const [categoryId, setCategoryId] = useState(null);
 
   return (
     <div className="container mx-auto flex flex-col px-4 md:flex-row md:space-x-4">
@@ -15,14 +15,12 @@ const Categories = ({ getCategories, getExpenses }) => {
         <CategorySelectionContainer
           session={session}
           getCategories={getCategories}
-          setCategoryId={setCategoryId}
         />
       </div>
       <div className="w-full md:w-2/3">
         <CategoryContainer
           session={session}
           getCategories={getCategories}
-          categoryId={categoryId}
           getExpenses={getExpenses}
         />
       </div>

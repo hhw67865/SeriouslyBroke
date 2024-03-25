@@ -4,7 +4,6 @@ import Errors from "../../../components/errors/Errors";
 import { useState } from "react";
 
 const DeleteCategoryForm = ({
-  categoryId,
   session,
   getCategories,
   getExpenses,
@@ -13,6 +12,8 @@ const DeleteCategoryForm = ({
 }) => {
   const [newCategoryId, setNewCategoryId] = useState(null);
   const [errors, setErrors] = useState(null);
+
+  const categoryId = category.id;
 
   const handleDelete = (e) => {
     e.preventDefault();

@@ -1,9 +1,19 @@
+import { useSearchParams } from "react-router-dom";
+
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
 
-const YearSelector = ({ year, setYear }) => {
+const YearSelector = ({ year }) => {
+  const [, setSearchParams] = useSearchParams();
+
   const handleYearChange = (event) => {
-    setYear(event.target.value);
+    setSearchParams(
+      (prev) => {
+        prev.set("year", event.target.value);
+        return prev;
+      },
+      { replace: true },
+    );
   };
 
   return (

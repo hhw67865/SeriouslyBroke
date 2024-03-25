@@ -1,6 +1,21 @@
-const Pagination = ({ setCurrentPage, currentPage, data, itemsPerPage }) => {
+import { useSearchParams } from "react-router-dom";
+
+const Pagination = ({ currentPage, data, itemsPerPage }) => {
+  const [, setSearchParams] = useSearchParams();
+
+  const setCurrentPage = (newPage) => {
+    setSearchParams(
+      (prev) => {
+        prev.set("page", newPage);
+        return prev;
+      },
+      { replace: true },
+    );
+  };
+
   const nextPage = () => setCurrentPage(currentPage + 1);
   const prevPage = () => setCurrentPage(currentPage - 1);
+  const totalPages = Math.ceil(data.length / itemsPerPage);
 
   return (
     <div className="flex items-center justify-between">
@@ -12,11 +27,11 @@ const Pagination = ({ setCurrentPage, currentPage, data, itemsPerPage }) => {
         &#8592; Prev
       </button>
       <span className="text-sm text-gray-500">
-        Page {currentPage} of {Math.ceil(data.length / itemsPerPage)}
+        Page {currentPage} of {totalPages}
       </span>
       <button
         onClick={nextPage}
-        disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
+        disabled={currentPage === totalPages}
         className="cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-1 text-black hover:bg-gray-200"
       >
         Next &#8594;

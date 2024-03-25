@@ -1,146 +1,19 @@
-import { useState, useMemo } from "react";
-import EditCategoryForm from "./EditCategoryForm";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
+import EditCategoryForm from "./EditCategoryForm";
+import ExpensesContainer from "./ExpensesContainer";
 import DeleteCategoryForm from "./DeleteCategoryForm";
 import formatMoney from "../../../utils/moneyFormatter";
-import MonthSelector from "../../../components/date_selectors/MonthSelector";
-import YearSelector from "../../../components/date_selectors/YearSelector";
-import Pagination from "../../../components/Pagination";
-import convertDate from "../../../utils/convertDate";
 
-const ExpenseCard = ({ expense }) => (
-  <li key={expense.id}>
-    <div className="block hover:bg-gray-50">
-      <div className="px-4 py-1 sm:px-6">
-        <div className="flex items-center justify-between">
-          <p className="truncate text-sm font-medium text-indigo-600">
-            {expense.name}
-          </p>
-          <div className="ml-2 flex flex-shrink-0">
-            <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-              {formatMoney(expense.amount)}
-            </p>
-          </div>
-        </div>
-        <div className="mt-1 sm:flex sm:justify-between">
-          <p className="flex items-center text-sm text-gray-500">
-            <time dateTime={expense.date}>{expense.date}</time>
-          </p>
-        </div>
-      </div>
-    </div>
-  </li>
-);
-
-const FillerExpenseCard = () => (
-  <div className="opacity-0">
-    <ExpenseCard
-      expense={{
-        id: "filler",
-        name: "filler",
-        amount: "filler",
-        date: "filler",
-      }}
-    />
-  </div>
-);
-
-const Filter = ({ isDescending, setIsDescending }) => (
-  <div className="flex items-center space-x-2 py-2">
-    <input
-      type="checkbox"
-      checked={isDescending}
-      onChange={() => setIsDescending(!isDescending)}
-      className="form-checkbox h-4 w-4 text-blue-600"
-    />
-    <label className="text-sm font-light text-gray-700">
-      Order by amount (descending)
-    </label>
-  </div>
-);
-
-const ExpensesContainer = ({ category }) => {
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isDescending, setIsDescending] = useState(false);
-  const itemsPerPage = 5;
-
-  const filteredExpenses = useMemo(() => {
-    let expenses = category.expenses.filter((expense) => {
-      const expenseDateObj = convertDate(expense.date);
-      return (
-        (!month || expenseDateObj.month === Number(month)) &&
-        (!year || expenseDateObj.year === Number(year))
-      );
-    });
-
-    if (isDescending) {
-      expenses.sort((a, b) => b.amount - a.amount);
-    }
-
-    return expenses;
-  }, [category.expenses, month, year, isDescending]);
-
-  const currentExpenses = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredExpenses.slice(startIndex, endIndex);
-  }, [filteredExpenses, currentPage, itemsPerPage]);
-
-  const fillerRows = itemsPerPage - currentExpenses.length;
-
-  return (
-    <div className="mt-5">
-      <div className="mb-5 flex space-x-4">
-        <MonthSelector month={month} setMonth={setMonth} />
-        <YearSelector year={year} setYear={setYear} />
-        <Filter isDescending={isDescending} setIsDescending={setIsDescending} />
-      </div>
-      <h3 className="mb-2 text-lg font-semibold">Expenses:</h3>
-      <div className="overflow-hidden bg-white shadow sm:rounded-md">
-        <ul className="divide-y divide-gray-200">
-          {currentExpenses.length > 0 ? (
-            <>
-              {currentExpenses.map((expense) => (
-                <ExpenseCard key={expense.id} expense={expense} />
-              ))}
-              {Array(fillerRows)
-                .fill()
-                .map((_, index) => (
-                  <FillerExpenseCard key={index} />
-                ))}
-            </>
-          ) : (
-            <li className="px-4 py-4 text-center text-gray-500 sm:px-6">
-              No expenses to display
-            </li>
-          )}
-        </ul>
-        {currentExpenses.length > 0 && (
-          <Pagination
-            itemsPerPage={itemsPerPage}
-            data={filteredExpenses}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-        )}
-      </div>
-    </div>
-  );
-};
-
-const CategoryContainer = ({
-  categoryId,
-  session,
-  getCategories,
-  getExpenses,
-}) => {
+const CategoryContainer = ({ session, getCategories, getExpenses }) => {
   const [showForm, setShowForm] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const categoryName = searchParams.get("category");
 
   const category = getCategories.data?.find(
-    (category) => category.id === categoryId,
+    (category) => category.name === categoryName,
   );
 
   return (
@@ -226,7 +99,6 @@ const CategoryContainer = ({
           category={category}
           getCategories={getCategories}
           getExpenses={getExpenses}
-          categoryId={categoryId}
         />
       )}
     </>

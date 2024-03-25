@@ -3,11 +3,7 @@ import Errors from "../../../components/errors/Errors";
 import CategorySelectionCard from "./CategorySelectionCard";
 import AddCategoryForm from "./AddCategoryForm";
 
-const CategorySelectionContainer = ({
-  getCategories,
-  setCategoryId,
-  session,
-}) => {
+const CategorySelectionContainer = ({ getCategories, session }) => {
   const [showForm, setShowForm] = useState(false);
   const [errors, setErrors] = useState(null);
 
@@ -18,11 +14,7 @@ const CategorySelectionContainer = ({
       </div>
       <div className="grid max-h-[32rem] grid-cols-1 gap-4 overflow-auto">
         {getCategories.data.map((category) => (
-          <CategorySelectionCard
-            key={category.id}
-            category={category}
-            setCategoryId={setCategoryId}
-          />
+          <CategorySelectionCard key={category.id} category={category} />
         ))}
         {showForm && (
           <AddCategoryForm
