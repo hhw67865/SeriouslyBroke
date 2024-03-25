@@ -1,6 +1,5 @@
 import { SessionContext } from "../context/SessionContext";
-import { useContext, useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useContext } from "react";
 import {
   CategoryContainer,
   CategorySelectionContainer,
