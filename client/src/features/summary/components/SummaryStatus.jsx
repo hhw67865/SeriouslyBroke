@@ -63,7 +63,11 @@ const SummaryStatus = ({ summary, summaryMonth }) => {
             What happened? Take a closer look &#x1F440;
           </div>
           {summary.exceeding_categories.map((category, id) => (
-            <OverBudgetCategoryButton key={id} category={category} summaryMonth={summaryMonth} />
+            <OverBudgetCategoryButton
+              key={id}
+              category={category}
+              summaryMonth={summaryMonth}
+            />
           ))}
         </div>
       </div>

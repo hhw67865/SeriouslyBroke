@@ -1,6 +1,10 @@
 import formatMoney from "../utils/moneyFormatter";
 
-import { MonthNavigation, SummaryStatus, SummaryChart } from "../features/summary"
+import {
+  MonthNavigation,
+  SummaryStatus,
+  SummaryChart,
+} from "../features/summary";
 
 const Summary = ({ summary, summaryMonth, setSummaryMonth }) => {
   return (
