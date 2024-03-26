@@ -58,18 +58,20 @@ const SummaryStatus = ({ summary, summaryMonth }) => {
             </>
           )}
         </div>
-        <div className="mt-4 text-gray-600">
-          <div className="mb-5 font-bold text-gray-700">
-            What happened? Take a closer look &#x1F440;
+        {exceedingCategories && (
+          <div className="mt-4 text-gray-600">
+            <div className="mb-5 font-bold text-gray-700">
+              What happened? Take a closer look &#x1F440;
+            </div>
+            {summary.exceeding_categories.map((category, id) => (
+              <OverBudgetCategoryButton
+                key={id}
+                category={category}
+                summaryMonth={summaryMonth}
+              />
+            ))}
           </div>
-          {summary.exceeding_categories.map((category, id) => (
-            <OverBudgetCategoryButton
-              key={id}
-              category={category}
-              summaryMonth={summaryMonth}
-            />
-          ))}
-        </div>
+        )}
       </div>
     </div>
   );
