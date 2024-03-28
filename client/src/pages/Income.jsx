@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { MonthlyChart } from "../features/income";
 
-const Income = ({ graphData, setMonths, months }) => {
+const Income = ({ incomeSummary, setMonths, months }) => {
   return (
     <div className="flex flex-col items-center">
       <MonthlyChart
-        graphData={graphData}
+        incomeSummary={incomeSummary}
         setMonths={setMonths}
         months={months}
       />

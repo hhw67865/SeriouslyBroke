@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import fetchAxios from "./lib/fetchAxios";
 
 const Data = ({ session }) => {
-  const [graphData, setGraphData] = useState(null);
+  const [incomeSummary, setIncomeSummary] = useState(null);
   const [months, setMonths] = useState(6);
   const [summaryMonth, setSummaryMonth] = useState(new Date());
   const [summary, setSummary] = useState(null);
@@ -28,10 +28,10 @@ const Data = ({ session }) => {
 
   useEffect(() => {
     fetchAxios(
-      { method: "GET", url: "/api/graph_data", params: { months: months } },
+      { method: "GET", url: "/api/income_summary", params: { months: months } },
       session,
     ).then((res) => {
-      setGraphData(res.data);
+      setIncomeSummary(res.data);
     });
   }, [months, getPaychecks.data]);
 
@@ -63,7 +63,7 @@ const Data = ({ session }) => {
           <Route
             path="/"
             element={
-              summary === null ? null : (
+              summary && (
                 <Summary
                   summary={summary}
                   summaryMonth={summaryMonth}
@@ -93,8 +93,9 @@ const Data = ({ session }) => {
           <Route
             path="/income"
             element={
+              incomeSummary &&
               <Income
-                graphData={graphData}
+                incomeSummary={incomeSummary}
                 setMonths={setMonths}
                 months={months}
               />

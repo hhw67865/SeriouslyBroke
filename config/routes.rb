@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     resources :assets
     resources :asset_types
     get 'monthly_summary', to: 'summary#monthly_summary'
-    get 'graph_data', to: 'users#graph_data'
+    get 'income_summary', to: 'summary#income_summary'
     get 'yearly_average_income', to: 'users#yearly_average_income'
     resources :users, only: [:index]
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

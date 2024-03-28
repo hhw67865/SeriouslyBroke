@@ -10,6 +10,16 @@ class SummaryController < ApplicationController
     end
   end
 
+  def income_summary
+    months = params[:months].to_i
+
+    if months.between?(0, 12)
+      render json: IncomeStatusService.call(@current_user, months), status: :ok
+    else
+      render json: { error: 'Invalid months parameter' }, status: :bad_request
+    end
+  end
+
   private
 
   def valid_date_params?(month, year)
