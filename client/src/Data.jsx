@@ -93,12 +93,13 @@ const Data = ({ session }) => {
           <Route
             path="/income"
             element={
-              incomeSummary &&
-              <Income
-                incomeSummary={incomeSummary}
-                setMonths={setMonths}
-                months={months}
-              />
+              incomeSummary && (
+                <Income
+                  incomeSummary={incomeSummary}
+                  setMonths={setMonths}
+                  months={months}
+                />
+              )
             }
           />
           <Route

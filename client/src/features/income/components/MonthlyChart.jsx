@@ -1,21 +1,41 @@
-import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
+import {
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar,
+} from "recharts";
 
 const MonthlyChart = ({ incomeSummary, setMonths, months }) => {
   const handleChange = (event) => {
     setMonths(Number(event.target.value));
   };
-  const COLORS = ['#6c5b7b', '#c06c84', '#f8b195', '#355c7d', '#a8a2a2', '#d6d1b1', '#e8ddb5']; // Adjusted color palette
+  const COLORS = [
+    "#6c5b7b",
+    "#c06c84",
+    "#f8b195",
+    "#355c7d",
+    "#a8a2a2",
+    "#d6d1b1",
+    "#e8ddb5",
+  ]; // Adjusted color palette
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-2">Monthly Income Summary</h2>
-      <p className="text-gray-500 mb-6">This chart shows the income summary for the past few months.</p>
+    <div className="flex flex-col items-center justify-center rounded-lg bg-white p-8 shadow-lg">
+      <h2 className="mb-2 text-2xl font-semibold text-gray-700">
+        Monthly Income Summary
+      </h2>
+      <p className="mb-6 text-gray-500">
+        This chart shows the income summary for the past few months.
+      </p>
 
-      <div className="mb-4 relative inline-block w-64">
+      <div className="relative mb-4 inline-block w-64">
         <select
           value={months}
           onChange={handleChange}
-          className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none"
         >
           {[...Array(13).keys()].slice(1).map((month) => (
             <option key={month} value={month}>
@@ -24,7 +44,11 @@ const MonthlyChart = ({ incomeSummary, setMonths, months }) => {
           ))}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <svg
+            className="h-4 w-4 fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
             <path d="M10 12l-6-6h12l-6 6z" />
           </svg>
         </div>
@@ -47,7 +71,14 @@ const MonthlyChart = ({ incomeSummary, setMonths, months }) => {
         <Tooltip />
         <Legend />
         {incomeSummary.income_sources.map((source, i) => {
-          return <Bar key={i} dataKey={source} stackId="a" fill={COLORS[i % COLORS.length]} />
+          return (
+            <Bar
+              key={i}
+              dataKey={source}
+              stackId="a"
+              fill={COLORS[i % COLORS.length]}
+            />
+          );
         })}
       </BarChart>
     </div>
