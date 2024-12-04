@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_03_032034) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_02_044105) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,6 +57,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_032034) do
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "frequency"
     t.index ["category_id"], name: "index_expenses_on_category_id"
   end
 

@@ -15,7 +15,6 @@ class BudgetStatusService
     {
       current_month: current_month?,
       status: budget_status,
-      current_budget:,
       total_budget:,
       total_expenses:,
       total_income:,
@@ -33,31 +32,58 @@ class BudgetStatusService
 
   def total_expenses_by_day
     expenses_by_day = fetch_expenses_by_day
-    running_total = BigDecimal('0')
+    running_total = 0.0
     days_in_month.map do |day|
-      running_total += BigDecimal(expenses_by_day[day] || '0')
+      expense = expenses_by_day[day] || 0
+      running_total += expense
       {
         date: I18n.l(day, format: '%-m/%-d'),
-        total: (day > Time.zone.today ? nil : running_total.round(2).to_f),
-        budget: (daily_budget * day.day).round(2).to_f
+        total: (day > Time.zone.today ? nil : running_total.round(2)),
+        budget: total_budget.round(2)
       }
     end
   end
-
+  
   def fetch_expenses_by_day
-    user.expenses
-        .where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year)
-        .group("date")
-        .sum(:amount)
-        .transform_keys(&:to_date)
+    start_date = Date.new(year, month, 1)
+    end_date = start_date.end_of_month
+  
+    # Fetch daily and monthly expenses
+    regular_expenses = user.expenses
+                           .where(frequency: [0, 1])
+                           .where(date: start_date..end_date)
+                           .group(:date)
+                           .sum(:amount)
+  
+    # Fetch and prorate annual expenses
+    annual_expenses = user.expenses
+                          .where(frequency: 2)
+                          .where("date > ? AND date <= ?", end_date - 11.months, end_date)
+                          .select('date, amount / 12.0 as prorated_amount')
+  
+    # Combine regular and prorated annual expenses
+    combined_expenses = regular_expenses.to_h
+  
+    annual_expenses.each do |expense|
+      expense_date = adjust_annual_expense_date(expense.date, start_date, end_date)
+      combined_expenses[expense_date] ||= 0
+      combined_expenses[expense_date] += expense.prorated_amount.to_f
+    end
+  
+    combined_expenses.transform_keys(&:to_date)
+  end
+
+  def adjust_annual_expense_date(original_date, start_date, end_date)
+    adjusted_date = Date.new(year, month, original_date.day)
+    adjusted_date = end_date if adjusted_date > end_date
+    adjusted_date
+  rescue Date::Error
+    # Handle invalid dates (e.g., February 30th)
+    end_date
   end
 
   def days_in_month
     (Date.new(year, month, 1)..Date.new(year, month, -1))
-  end
-
-  def daily_budget
-    BigDecimal(total_budget) / days_in_month.count
   end
 
   def current_month?
@@ -72,10 +98,6 @@ class BudgetStatusService
     @total_budget ||= user.total_budget(month, year)
   end
 
-  def current_budget
-    current_month? ? (BigDecimal(total_budget) * percent_of_month).to_f : total_budget
-  end
-
   def total_expenses
     @total_expenses ||= user.total_expenses(month, year)
   end
@@ -85,7 +107,7 @@ class BudgetStatusService
   end
 
   def budget_status
-    total_expenses <= current_budget ? 'You are within your budget!' : 'You have exceeded your budget!'
+    total_expenses <= total_budget ? 'You are within your budget!' : 'You have exceeded your budget!'
   end
 
   def exceeding_categories
@@ -94,7 +116,7 @@ class BudgetStatusService
 
   def format_categories
     exceeding_categories.map do |category|
-      monthly_expense = category.total_expense(month, year)
+      monthly_expense = category.total_expenses(month, year)
       min_amount = current_month? ? category.minimum_amount * percent_of_month : category.minimum_amount
 
       {
@@ -108,7 +130,7 @@ class BudgetStatusService
 
   def expense_per_category
     user.categories.map do |category|
-      total_expense = category.total_expense(month, year)
+      total_expense = category.total_expenses(month, year)
       next if total_expense.zero?
   
       {

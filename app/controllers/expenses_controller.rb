@@ -53,12 +53,12 @@ class ExpensesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def expense_params
-      params.require(:expense).permit(:name, :amount, :date, :category_id)
+      params.require(:expense).permit(:name, :amount, :date, :category_id, :frequency)
     end
 
     def expenses_params
       params.require(:expenses).map do |p|
-        p.permit(:name, :amount, :date, :category_id)
+        p.permit(:name, :amount, :date, :category_id, :frequency)
       end
     end
 end

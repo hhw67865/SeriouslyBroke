@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include ExpenseCalculable
+
   has_one :clerk_user, foreign_key: 'id', primary_key: 'clerk_user_id'
   has_many :categories, dependent: :destroy
   has_many :expenses, through: :categories
@@ -37,17 +39,13 @@ class User < ApplicationRecord
     categories.sum(:minimum_amount)
   end
 
-  def total_expenses(month, year)
-    expenses.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
-  end
-
   def total_income(month, year)
     paychecks.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
   end
 
   def exceeding_categories(month, year)
     categories.select do |category|
-      category.total_expense(month, year) > category.minimum_amount && category.minimum_amount > 0
+      category.total_expenses(month, year) > category.minimum_amount && category.minimum_amount > 0
     end
   end
 end

@@ -23,6 +23,7 @@ const useAxiosGet = (url, session) => {
       })
       .catch((err) => {
         setError(formatAxiosErrors(err));
+        console.log(`failed to fetch data ${url}`, err);
       });
   }, [update]);
 

@@ -8,7 +8,7 @@ import ExpenseCard from "./ExpenseCard";
 import FillerExpenseCard from "./FillerExpenseCard";
 import Pagination from "../../../components/Pagination";
 
-const ExpensesContainer = ({ category }) => {
+const ExpensesContainer = ({ category, getExpenses, getCategories }) => {
   const [searchParams] = useSearchParams();
   const month = Number(searchParams.get("month")) || "";
   const year = Number(searchParams.get("year")) || new Date().getFullYear();
@@ -53,7 +53,12 @@ const ExpensesContainer = ({ category }) => {
           {currentExpenses.length > 0 ? (
             <>
               {currentExpenses.map((expense) => (
-                <ExpenseCard key={expense.id} expense={expense} />
+                <ExpenseCard
+                  key={expense.id}
+                  expense={expense}
+                  getExpenses={getExpenses}
+                  getCategories={getCategories}
+                />
               ))}
               {Array(fillerRows)
                 .fill()
