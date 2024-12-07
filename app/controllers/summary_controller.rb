@@ -1,13 +1,9 @@
 class SummaryController < ApplicationController
-  def monthly_summary
+  def graph_data
     month = params[:month].to_i
     year = params[:year].to_i
 
-    if valid_date_params?(month, year)
-      render json: BudgetStatusService.call(@current_user, month, year), status: :ok
-    else
-      render json: { error: 'Invalid month or year' }, status: :bad_request
-    end
+    render json: GraphService.call(@current_user, month, year), status: :ok
   end
 
   def income_summary
@@ -18,6 +14,10 @@ class SummaryController < ApplicationController
     else
       render json: { error: 'Invalid months parameter' }, status: :bad_request
     end
+  end
+
+  def category_summary
+    render json: CategoryStatusService.call(@current_user, params[:month].to_i, params[:year].to_i), status: :ok
   end
 
   private

@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import { MonthlyChart } from "../features/income";
 
-const Income = ({ incomeSummary, setMonths, months }) => {
+const Income = ({ setMonths, months }) => {
   return (
     <div className="flex flex-col items-center">
       <MonthlyChart
-        incomeSummary={incomeSummary}
         setMonths={setMonths}
         months={months}
       />

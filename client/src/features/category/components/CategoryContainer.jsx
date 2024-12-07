@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import EditCategoryForm from "./EditCategoryForm";
 import ExpensesContainer from "./ExpensesContainer";
 import DeleteCategoryForm from "./DeleteCategoryForm";
 import formatMoney from "../../../utils/moneyFormatter";
+import { ApiContext } from "../../../context/ApiContext";
 
-const CategoryContainer = ({ session, getCategories, getExpenses }) => {
+const CategoryContainer = () => {
+  const apiCalls = useContext(ApiContext);
   const [showForm, setShowForm] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [searchParams] = useSearchParams();
   const categoryName = searchParams.get("category");
 
-  const category = getCategories.data?.find(
+  const category = apiCalls.categories.data?.find(
     (category) => category.name === categoryName,
   );
 
@@ -42,20 +44,6 @@ const CategoryContainer = ({ session, getCategories, getExpenses }) => {
                   </div>
 
                   <div className="flex flex-col">
-                    <p className="my-2 text-gray-500">
-                      <span className="font-bold">Current Month Total:</span>{" "}
-                      {formatMoney(category.current_month_total)}
-                    </p>
-                    <p className="my-2 text-gray-500">
-                      <span className="font-bold">Previous Month Total:</span>{" "}
-                      {formatMoney(category.last_month_total)}
-                    </p>
-                    <p className="mt-2 text-gray-500">
-                      <span className="font-bold">
-                        Three Month Average Total:
-                      </span>{" "}
-                      {formatMoney(category.last_three_month_average)}
-                    </p>
                     <p className="mt-2">
                       <span className="text-lg font-bold">Budget:</span>{" "}
                       {category.minimum_amount
@@ -71,18 +59,13 @@ const CategoryContainer = ({ session, getCategories, getExpenses }) => {
                     <hr className="my-4 border-gray-200" />
                     <ExpensesContainer
                       category={category}
-                      getExpenses={getExpenses}
-                      getCategories={getCategories}
                     />
                   </div>
                 </>
               ) : (
                 <EditCategoryForm
-                  session={session}
-                  getCategories={getCategories}
                   setShowForm={setShowForm}
                   category={category}
-                  getExpenses={getExpenses}
                 />
               )}
             </div>
@@ -98,11 +81,8 @@ const CategoryContainer = ({ session, getCategories, getExpenses }) => {
       )}
       {showDeleteDialog && (
         <DeleteCategoryForm
-          session={session}
           setShowDeleteDialog={setShowDeleteDialog}
           category={category}
-          getCategories={getCategories}
-          getExpenses={getExpenses}
         />
       )}
     </>

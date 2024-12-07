@@ -2,7 +2,7 @@ import formatMoney from "../../../utils/moneyFormatter";
 import { useState } from "react";
 import EditExpenseForm from "./EditExpenseForm";
 
-const ExpenseCard = ({ expense, getExpenses, getCategories }) => {
+const ExpenseCard = ({ expense }) => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const handleClick = () => {
@@ -50,8 +50,6 @@ const ExpenseCard = ({ expense, getExpenses, getCategories }) => {
       {showEditModal && (
         <EditExpenseForm
           expense={expense}
-          getExpenses={getExpenses}
-          getCategories={getCategories}
           onClose={() => setShowEditModal(false)}
         />
       )}

@@ -1,17 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import AssetCard from "./AssetCard";
 import AssetHeader from "./AssetHeader";
 import AddAssetForm from "./AddAssetForm";
+import { ApiContext } from "../../../context/ApiContext";
 
-const AssetContainer = ({
-  assetTypeId,
-  session,
-  getAssetTypes,
-  getTransactions,
-}) => {
+const AssetContainer = ({ assetTypeId }) => {
+  const apiCalls = useContext(ApiContext);
   const [showForm, setShowForm] = useState(false);
 
-  const assetType = getAssetTypes.data?.find((type) => type.id === assetTypeId);
+  const assetType = apiCalls.assetTypes.data?.find(
+    (type) => type.id === assetTypeId,
+  );
 
   return (
     <>
@@ -23,17 +22,12 @@ const AssetContainer = ({
               <AssetCard
                 key={asset.id}
                 asset={asset}
-                session={session}
-                getTransactions={getTransactions}
-                getAssetTypes={getAssetTypes}
               />
             ))}
             {showForm && (
               <AddAssetForm
                 setShowForm={setShowForm}
-                session={session}
                 assetType={assetType}
-                getAssetTypes={getAssetTypes}
               />
             )}
           </div>

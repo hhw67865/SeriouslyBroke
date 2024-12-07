@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import CreatableSelect from "react-select/creatable";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import Errors from "../../../components/errors/Errors";
+import { ApiContext } from "../../../context/ApiContext";
 
-const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
+const PaycheckForm = () => {
+  const apiCalls = useContext(ApiContext);
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
     date: "",
@@ -41,12 +43,12 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
         url: "/api/paychecks",
         data: formData,
       },
-      session,
+      apiCalls.session,
     )
       .then(() => {
         setFormData((prev) => ({ ...prev, date: "", amount: 0 }));
-        getPaychecks.updateData();
-        getIncomeSources.updateData();
+        apiCalls.paychecks.updateData();
+        apiCalls.incomeSources.updateData();
         setErrors(null);
       })
       .catch((err) => {
@@ -80,7 +82,7 @@ const PaycheckForm = ({ session, getPaychecks, getIncomeSources }) => {
           <CreatableSelect
             isClearable
             required
-            options={getIncomeSources.data.map((incomeSource) => ({
+            options={apiCalls.incomeSources.data.map((incomeSource) => ({
               label: incomeSource.name,
               value: incomeSource.id,
             }))}

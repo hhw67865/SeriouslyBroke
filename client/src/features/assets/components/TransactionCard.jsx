@@ -1,19 +1,18 @@
+import { useContext } from "react";
 import formatMoney from "../../../utils/moneyFormatter";
+import { ApiContext } from "../../../context/ApiContext";
 import fetchAxios from "../../../lib/fetchAxios";
 
-const TransactionCard = ({
-  transaction,
-  session,
-  getTransactions,
-  getAssetTypes,
-}) => {
+const TransactionCard = ({ transaction }) => {
+  const apiCalls = useContext(ApiContext);
+
   function handleDelete() {
     fetchAxios(
       { method: "DELETE", url: `/api/asset_transactions/${transaction.id}` },
-      session,
+      apiCalls.session,
     ).then(() => {
-      getTransactions.updateData();
-      getAssetTypes.updateData();
+      apiCalls.transactions.updateData();
+      apiCalls.assetTypes.updateData();
     });
   }
 

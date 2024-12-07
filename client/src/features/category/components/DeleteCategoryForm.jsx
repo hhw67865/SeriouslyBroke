@@ -1,15 +1,11 @@
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import Errors from "../../../components/errors/Errors";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ApiContext } from "../../../context/ApiContext";
 
-const DeleteCategoryForm = ({
-  session,
-  getCategories,
-  getExpenses,
-  setShowDeleteDialog,
-  category,
-}) => {
+const DeleteCategoryForm = ({ setShowDeleteDialog, category }) => {
+  const apiCalls = useContext(ApiContext);
   const [newCategoryId, setNewCategoryId] = useState(null);
   const [errors, setErrors] = useState(null);
 
@@ -23,11 +19,11 @@ const DeleteCategoryForm = ({
         url: `/api/categories/${categoryId}`,
         params: { category_id: newCategoryId },
       },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        getCategories.updateData();
-        getExpenses.updateData();
+        apiCalls.categories.updateData();
+        apiCalls.expenses.updateData();
         setShowDeleteDialog(false);
         setNewCategoryId(null);
       })
@@ -79,7 +75,7 @@ const DeleteCategoryForm = ({
                         className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       >
                         <option value="">Select a category</option>
-                        {getCategories.data.map((category) => {
+                        {apiCalls.categories.data.map((category) => {
                           return category.id === categoryId ? null : (
                             <option key={category.id} value={category.id}>
                               {category.name}

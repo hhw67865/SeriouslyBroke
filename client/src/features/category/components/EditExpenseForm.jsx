@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import Errors from "../../../components/errors/Errors";
-import { SessionContext } from "../../../context/SessionContext";
+import { ApiContext } from "../../../context/ApiContext";
 
 const frequencyOptions = [
   { value: 0, label: "Daily" },
@@ -10,7 +10,8 @@ const frequencyOptions = [
   { value: 2, label: "Annual" },
 ];
 
-const EditExpenseForm = ({ expense, getExpenses, getCategories, onClose }) => {
+const EditExpenseForm = ({ expense, onClose }) => {
+  const apiCalls = useContext(ApiContext);
   const [formData, setFormData] = useState({
     name: expense.name,
     amount: expense.amount,
@@ -21,7 +22,6 @@ const EditExpenseForm = ({ expense, getExpenses, getCategories, onClose }) => {
       )?.value || 0,
   });
   const [errors, setErrors] = useState(null);
-  const session = useContext(SessionContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,11 +39,11 @@ const EditExpenseForm = ({ expense, getExpenses, getCategories, onClose }) => {
         url: `/api/expenses/${expense.id}`,
         data: { expense: formData },
       },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        getExpenses.updateData();
-        getCategories.updateData();
+        apiCalls.expenses.updateData();
+        apiCalls.categories.updateData();
         onClose();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));

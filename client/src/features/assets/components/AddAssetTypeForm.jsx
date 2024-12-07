@@ -1,23 +1,23 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
+import { ApiContext } from "../../../context/ApiContext";
 
 const AddAssetTypeForm = ({
-  session,
-  getAssetTypes,
   setShowForm,
   setErrors,
 }) => {
+  const apiCalls = useContext(ApiContext);
   const [name, setName] = useState("");
 
   const handleAddAsset = (e) => {
     e.preventDefault();
     fetchAxios(
       { method: "POST", url: "/api/asset_types", data: { name } },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        getAssetTypes.updateData();
+        apiCalls.assetTypes.updateData();
         setName("");
         setShowForm(false);
       })

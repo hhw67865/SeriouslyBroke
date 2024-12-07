@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import Errors from "../../../components/errors/Errors";
+import { ApiContext } from "../../../context/ApiContext";
 
 const frequencyOptions = [
   { value: 0, label: "Daily" },
@@ -9,7 +10,8 @@ const frequencyOptions = [
   { value: 2, label: "Annual" },
 ];
 
-const ExpenseForm = ({ session, getExpenses, getCategories }) => {
+const ExpenseForm = () => {
+  const apiCalls = useContext(ApiContext);
   const [expenses, setExpenses] = useState([
     { name: "", category_id: "", amount: "", frequency: 0 },
   ]);
@@ -51,17 +53,17 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
     }));
     fetchAxios(
       { method: "POST", url: "/api/expenses", data: { expenses: data } },
-      session,
+      apiCalls.session,
     )
       .then(() => {
         setExpenses([{ name: "", category_id: "", amount: "", frequency: 0 }]);
-        getExpenses.updateData();
-        getCategories.updateData();
+        apiCalls.expenses.updateData();
+        apiCalls.categories.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };
 
-  const sortedCategories = getCategories.data?.sort((a, b) => {
+  const sortedCategories = apiCalls.categories.data?.sort((a, b) => {
     if (a.name < b.name) {
       return -1;
     } else {

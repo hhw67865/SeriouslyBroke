@@ -1,13 +1,12 @@
 import formatMoney from "../../../utils/moneyFormatter";
 import ExpensesCard from "./ExpensesCard";
 
+
 const WeekViewerColumn = ({
   formattedDate,
   dailyExpenses,
   editingExpenseId,
-  session,
   setEditingExpenseId,
-  getExpenses,
 }) => {
   const sortedExpenses = [...dailyExpenses].sort(
     (a, b) => a.category.id - b.category.id,
@@ -22,8 +21,6 @@ const WeekViewerColumn = ({
             key={key}
             editingExpenseId={editingExpenseId}
             expense={expense}
-            session={session}
-            getExpenses={getExpenses}
             setEditingExpenseId={setEditingExpenseId}
           />
         ))}

@@ -1,17 +1,16 @@
 import Wheel from "@uiw/react-color-wheel";
 import { hsvaToHex, hexToHsva } from "@uiw/color-convert";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ApiContext } from "../../../context/ApiContext";
 import fetchAxios from "../../../lib/fetchAxios";
 import Errors from "../../../components/errors/Errors";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 
 const EditCategoryForm = ({
   category,
-  session,
   setShowForm,
-  getCategories,
-  getExpenses,
 }) => {
+  const apiCalls = useContext(ApiContext);
   const [hsva, setHsva] = useState(
     category.color ? hexToHsva(category.color) : { h: 214, s: 43, v: 90, a: 1 },
   );
@@ -30,12 +29,12 @@ const EditCategoryForm = ({
     };
     fetchAxios(
       { method: "PUT", url: `/api/categories/${category.id}`, data: data },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        getCategories.updateData();
+        apiCalls.categories.updateData();
         setShowForm(false);
-        getExpenses.updateData();
+        apiCalls.expenses.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   }

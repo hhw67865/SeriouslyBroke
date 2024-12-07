@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { SessionContext } from "./context/SessionContext";
+import { ApiContext } from "./context/ApiContext";
 import {
   Expenses,
   Income,
@@ -7,122 +7,114 @@ import {
   Summary,
   Assets,
   Categories,
+  LoadingPage,
 } from "./pages";
 import Navbar from "./layouts/Navbar";
 import useAxiosGet from "./hooks/useAxiosGet";
-import { useEffect, useState } from "react";
-import fetchAxios from "./lib/fetchAxios";
+import { useState } from "react";
+
 
 const Data = ({ session }) => {
-  const [incomeSummary, setIncomeSummary] = useState(null);
   const [months, setMonths] = useState(6);
   const [summaryMonth, setSummaryMonth] = useState(new Date());
-  const [summary, setSummary] = useState(null);
 
-  const getTransactions = useAxiosGet("/api/asset_transactions", session);
-  const getAssetTypes = useAxiosGet("/api/asset_types", session);
-  const getExpenses = useAxiosGet("/api/expenses", session);
-  const getCategories = useAxiosGet("/api/categories", session);
-  const getPaychecks = useAxiosGet("/api/paychecks", session);
-  const getIncomeSources = useAxiosGet("/api/income_sources", session);
+  const baseApiCalls = {
+    transactions: useAxiosGet("/api/asset_transactions", session),
+    assetTypes: useAxiosGet("/api/asset_types", session),
+    expenses: useAxiosGet("/api/expenses", session),
+    categories: useAxiosGet("/api/categories", session),
+    paychecks: useAxiosGet("/api/paychecks", session),
+    incomeSources: useAxiosGet("/api/income_sources", session)
+  };
 
-  useEffect(() => {
-    fetchAxios(
-      { method: "GET", url: "/api/income_summary", params: { months: months } },
-      session,
-    ).then((res) => {
-      setIncomeSummary(res.data);
-    });
-  }, [months, getPaychecks.data]);
+  const summaryApiCalls = {
+    incomeSummary: useAxiosGet(`/api/income_summary?months=${months}`, session, [ baseApiCalls.paychecks.data, months]),
+    summary: useAxiosGet(`/api/budget_status?month=${summaryMonth.getMonth() + 1}&year=${summaryMonth.getFullYear()}`, session, [
+      summaryMonth,
+      baseApiCalls.expenses.data,
+      baseApiCalls.categories.data,
+      baseApiCalls.paychecks.data,
+      baseApiCalls.incomeSources.data,
+    ]),
+    graphData: useAxiosGet(`/api/graph_data?month=${summaryMonth.getMonth() + 1}&year=${summaryMonth.getFullYear()}`, session, [
+      summaryMonth,
+      baseApiCalls.expenses.data,
+      baseApiCalls.categories.data,
+      baseApiCalls.paychecks.data,
+      baseApiCalls.incomeSources.data,
+    ]),
+    categorySummary: useAxiosGet(`/api/category_summary?month=${summaryMonth.getMonth() + 1}&year=${summaryMonth.getFullYear()}`, session, [
+      summaryMonth,
+      baseApiCalls.expenses.data,
+      baseApiCalls.categories.data,
+    ])
+  }
 
-  useEffect(() => {
-    const month = summaryMonth.getMonth() + 1;
-    fetchAxios(
-      {
-        method: "GET",
-        url: "/api/monthly_summary",
-        params: { month: month, year: summaryMonth.getFullYear() },
-      },
-      session,
-    ).then((res) => {
-      setSummary(res.data);
-    });
-  }, [
-    summaryMonth,
-    getExpenses.data,
-    getCategories.data,
-    getPaychecks.data,
-    getIncomeSources.data,
-  ]);
+  const apiCalls = {
+    ...baseApiCalls,
+    ...summaryApiCalls,
+    session,
+  }
+
+  const isLoading = Object.entries(apiCalls)
+    .filter(([key]) => key !== "session")
+    .some(([, call]) => !call.data || call.error);
+
+  if (isLoading) {
+    return <LoadingPage apiCalls={apiCalls} />;
+  }
 
   return (
-    <SessionContext.Provider value={session}>
+    <ApiContext.Provider value={apiCalls}>
       <Navbar />
       <div className="mt-40 flex w-full flex-grow flex-col items-center">
         <Routes>
           <Route
             path="/"
             element={
-              summary && (
-                <Summary
-                  summary={summary}
-                  summaryMonth={summaryMonth}
-                  setSummaryMonth={setSummaryMonth}
-                />
-              )
+              <Summary
+                summaryMonth={summaryMonth}
+                setSummaryMonth={setSummaryMonth}
+              />
             }
           />
           <Route
             path="/expenses"
             element={
-              <Expenses
-                getExpenses={getExpenses}
-                getCategories={getCategories}
-              />
+              <Expenses/>
             }
           />
           <Route
             path="/expenses/categories"
             element={
-              <Categories
-                getExpenses={getExpenses}
-                getCategories={getCategories}
-              />
+              <Categories/>
             }
           />
           <Route
             path="/income"
             element={
-              incomeSummary && (
-                <Income
-                  incomeSummary={incomeSummary}
-                  setMonths={setMonths}
+              <Income
+                setMonths={setMonths}
                   months={months}
-                />
-              )
+              />
             }
           />
           <Route
             path="/income/paycheck"
             element={
-              <Paycheck
-                getPaychecks={getPaychecks}
-                getIncomeSources={getIncomeSources}
-              />
+              <Paycheck/>
             }
           />
           <Route
             path="/assets"
             element={
-              <Assets
-                getAssetTypes={getAssetTypes}
-                getTransactions={getTransactions}
-              />
+              <Assets/>
             }
           />
         </Routes>
       </div>
-    </SessionContext.Provider>
+    </ApiContext.Provider>
   );
 };
+
 export default Data;
