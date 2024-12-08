@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const OverBudgetCategoryButton = ({ category, summaryMonth }) => {
   const to = {
-    pathname: "/expenses/categories",
+    pathname: "/categories",
     search: `?category=${encodeURIComponent(
       category.name,
     )}&isDescending=true&month=${

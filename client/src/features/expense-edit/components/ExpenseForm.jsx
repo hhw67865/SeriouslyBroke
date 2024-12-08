@@ -63,14 +63,6 @@ const ExpenseForm = () => {
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };
 
-  const sortedCategories = apiCalls.categories.data?.sort((a, b) => {
-    if (a.name < b.name) {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
-
   return (
     <div className="mt-6 rounded-md bg-gray-100 p-6 shadow-md">
       <h2 className="mb-4 text-center text-2xl font-semibold text-gray-700">
@@ -114,7 +106,7 @@ const ExpenseForm = () => {
                 className="rounded border p-2"
               >
                 <option value="">Select a category</option>
-                {sortedCategories.map((category) => (
+                {apiCalls.categories.data.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
                   </option>

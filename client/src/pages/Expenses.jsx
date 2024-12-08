@@ -32,7 +32,7 @@ const Expenses = () => {
   return (
     <div className="flex w-full flex-col items-center">
       <Link
-        to="/expenses/categories"
+        to="/categories"
         className="focus:shadow-outline mx-auto mt-4 w-[90%] rounded px-4 py-2 text-end font-bold text-white hover:underline focus:outline-none"
       >
         Edit Categories/Budget

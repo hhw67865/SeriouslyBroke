@@ -84,7 +84,7 @@ const Data = ({ session }) => {
             }
           />
           <Route path="/expenses" element={<Expenses />} />
-          <Route path="/expenses/categories" element={<Categories />} />
+          <Route path="/categories" element={<Categories />} />
           <Route
             path="/income"
             element={<Income setMonths={setMonths} months={months} />}

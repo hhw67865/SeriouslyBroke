@@ -16,13 +16,14 @@ const CategorySelectionCard = ({
 
   return (
     <div
-      className="flex items-center rounded-lg border bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
+      className="flex items-center rounded-lg border bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer"
       style={{ borderColor: category.color, borderLeftWidth: "4px" }}
+      onClick={handleClick}
     >
-      <div className="flex-grow cursor-pointer" onClick={handleClick}>
+      <div className="flex-grow">
         <h2 className="text-lg font-semibold text-gray-800">{category.name}</h2>
       </div>
-      <div className="flex flex-col space-y-1">
+      <div className="flex flex-col space-y-1" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onMoveUp}
           className={`rounded-full p-1 transition-colors duration-200 hover:bg-gray-100 ${isFirst ? "cursor-not-allowed text-gray-300" : "text-gray-500 hover:text-secondary"}`}
