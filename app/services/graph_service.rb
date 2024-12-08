@@ -11,6 +11,8 @@ class GraphService
 
   def call
     {
+      month:,
+      year:,
       expenses_graph_data:,
       total_budget:,
       total_expenses:,
@@ -58,11 +60,11 @@ class GraphService
                            .group(:date)
                            .sum(:amount)
 
-    # Fetch and prorate annual expenses
+    # Fetch annual expenses
     annual_expenses = user.expenses
                           .where(frequency: 2)
-                          .where("date > ? AND date <= ?", end_date - 11.months, end_date)
-                          .select('date, amount / 12.0 as prorated_amount')
+                          .where("date > ? AND date <= ?", end_date - 1.year, end_date)
+                          .select('date, amount')
 
     # Combine regular and prorated annual expenses
     combined_expenses = regular_expenses.to_h
@@ -78,12 +80,15 @@ class GraphService
     prorated_amount = expense.amount / 12.0
     expense_day = expense.date.day
 
-    (start_date..end_date).each do |date|
-      if date.day == expense_day || (date == date.at_end_of_month && expense_day > date.day)
-        combined_expenses[date] ||= 0
-        combined_expenses[date] += prorated_amount
-      end
-    end
+    target_day = if [28, 29, 30, 31].include?(expense_day)
+                   end_date.day
+                 else
+                   expense_day
+                 end
+
+    target_date = Date.new(end_date.year, end_date.month, target_day)
+    combined_expenses[target_date] ||= 0
+    combined_expenses[target_date] += prorated_amount
   end
 
   def days_in_month

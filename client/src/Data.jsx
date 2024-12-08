@@ -32,9 +32,7 @@ const Data = ({ session }) => {
     summary: useAxiosGet(`/api/budget_status?month=${summaryMonth.getMonth() + 1}&year=${summaryMonth.getFullYear()}`, session, [
       summaryMonth,
       baseApiCalls.expenses.data,
-      baseApiCalls.categories.data,
-      baseApiCalls.paychecks.data,
-      baseApiCalls.incomeSources.data,
+      baseApiCalls.categories.data
     ]),
     graphData: useAxiosGet(`/api/graph_data?month=${summaryMonth.getMonth() + 1}&year=${summaryMonth.getFullYear()}`, session, [
       summaryMonth,

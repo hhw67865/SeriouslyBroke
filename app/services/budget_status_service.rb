@@ -16,83 +16,35 @@ class BudgetStatusService
   end
 
   def call
-    budget_data = gather_budget_data
-    overspending_analysis = analyze_overspending(budget_data)
-    generate_summary(budget_data, overspending_analysis)
+    if month == 1
+      previous_month = 12
+      previous_year = year - 1
+    else
+      previous_month = month - 1
+      previous_year = year
+    end
+
+    generate_summary(data_for_prompt)
   end
 
   private
 
   attr_reader :user, :month, :year, :api_key
 
-  def gather_budget_data
-    current_month = Date.today.month == @month && Date.today.year == @year
-    total_budget = user.total_budget(month, year)
-    total_expenses = user.total_expenses(month, year)
+  def data_for_prompt
+    previous_month = month == 1 ? 12 : month - 1
+    previous_year = month == 1 ? year - 1 : year
 
     {
-      month: Date::MONTHNAMES[@month],
-      year: @year,
-      current_month: current_month,
-      total_budget: total_budget,
-      total_expenses: total_expenses,
-      budget_percentage_used: total_budget.positive? ? (total_expenses / total_budget * 100).round(2) : 0,
-      month_progress: current_month ? (Date.today.day.to_f / Date.today.end_of_month.day * 100).round(2) : 100,
-      category_summaries: gather_category_summaries(current_month)
+      expenses: user.all_expenses(month, year),
+      previous_expenses: user.all_expenses(previous_month, previous_year),
+      categories: user.categories,
+      current_month: month == Date.today.month && year == Date.today.year,
+      days_left: (Date.new(year, month, -1) - Date.today).to_i
     }
   end
 
-  def gather_category_summaries(current_month)
-    user.categories.map do |category|
-      monthly_budget = category.minimum_amount
-      current_expense = category.total_expenses(month, year)
-
-      {
-        name: category.name,
-        budget: monthly_budget,
-        expense: current_expense,
-        percentage_used: monthly_budget.positive? ? (current_expense / monthly_budget * 100).round(2) : 0,
-        over_budget: current_expense > monthly_budget
-      }
-    end
-  end
-
-  def analyze_overspending(budget_data)
-    current_month = budget_data[:current_month]
-    category_summaries = budget_data[:category_summaries]
-
-    overspending_categories = category_summaries.select do |category|
-      if current_month
-        days_left_percentage = (100 - budget_data[:month_progress]).round(2)
-        budget_left_percentage = (100 - category[:percentage_used]).round(2)
-        budget_left_percentage < days_left_percentage
-      else
-        category[:over_budget]
-      end
-    end
-
-    overspending_categories.map do |category|
-      top_contributors = top_overspending_contributors(category[:name])
-      {
-        name: category[:name],
-        percentage_used: category[:percentage_used],
-        top_contributors: top_contributors
-      }
-    end
-  end
-
-  def top_overspending_contributors(category_name)
-    expenses = user.expenses.where(
-      category: user.categories.find_by(name: category_name),
-      date: Date.new(year, month, 1)..Date.new(year, month, -1)
-    ).order(amount: :desc).limit(3)
-
-    expenses.reject { |e| e.frequency == 'monthly' }.map do |e|
-      { description: e.name, amount: e.amount }
-    end
-  end
-
-  def generate_summary(budget_data, overspending_analysis)
+  def generate_summary(data)
     uri = URI('https://api.openai.com/v1/chat/completions')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -105,49 +57,58 @@ class BudgetStatusService
       model: 'gpt-4o',
       messages: [
         { role: 'system', content: 'You are a helpful financial advisor providing concise budget summaries.' },
-        { role: 'user', content: create_prompt(budget_data, overspending_analysis) }
+        { role: 'user', content: create_prompt(data) }
       ],
       temperature: 0.2,
-      max_tokens: 300
+      max_tokens: 350
     }.to_json
 
     response = http.request(request)
     JSON.parse(response.body).dig('choices', 0, 'message', 'content')
   end
 
-  def create_prompt(budget_data, overspending_analysis)
-    if budget_data[:total_expenses].zero? && budget_data[:total_budget].zero?
+  def create_prompt(data)
+    if data[:expenses].count.zero?
       return "No expenses or budgets set. Please add expenses and set category budgets for analysis."
     end
 
     <<~PROMPT
-      Provide a concise budget analysis for #{budget_data[:month]} #{budget_data[:year]}:
+      Provide a concise budget analysis for #{month} #{year}:
 
-      ## Overall
+      Here are the categories for this user with their budgets:
+      #{data[:categories].map { |c| "- #{c.name}: $#{c.minimum_amount}" }.join("\n")}
 
-      - Total Budget: $#{budget_data[:total_budget]}
-      - Total Expenses: $#{budget_data[:total_expenses]}
-      - Budget Used: #{budget_data[:budget_percentage_used]}%
-      #{budget_data[:current_month] ? "- Month Progress: #{budget_data[:month_progress]}%" : ""}
+      Here are the expenses for the month:
+      #{data[:expenses].map { |e| "- #{e.name}: $#{e.amount}. Frequency: #{e.frequency}. Category: #{e.category.name}. date: #{e.date}" }.join("\n")}
 
-      ## Overspending Analysis
+      Here are the expenses for the previous month:
+      #{data[:previous_expenses].map { |e| "- #{e.name}: $#{e.amount}. Frequency: #{e.frequency}. Category: #{e.category.name}. date: #{e.date}" }.join("\n")}
 
-      #{overspending_analysis.map do |category|
-        "### #{category[:name]}: #{category[:percentage_used]}% used
+      Note that annual expenses are prorated each month.
 
-        Top contributors:
-        #{category[:top_contributors].map { |c| "- #{c[:description]}: $#{c[:amount]}" }.join("\n")}"
-      end.join("\n\n")}
+      #{if data[:current_month]
+        "Please note that the current month is not yet complete and there are still #{data[:days_left]} days left in the month.
+        Also consider that monthly frequencies will only happen once a month, so if a category's budget is close to being spent but the main expense contributing to the category is a monthly expense, it may not be overspent yet.
+        Please provide:
 
-      Please provide:
+        1. Tell the user how much they should be aiming to spend per week in the remaining days of the month to stay on track to meet their budget goals. Please look at the previous month trend on the habits of the user's expenses when analyzing this.
+        2. What categories are trending higher than the previous month based on the day.
+        3. An analysis of the categories that are at risk of overspending based on the current progress and the expenses that are contributing to the category. Again please consider the monthly frequencies. Please look at the previous month trend when analyzing the risk of overspending.
+        4. What expenses should I expect and prepare for in the upcoming days?
 
-      1. A brief overview of the budget status.
-      2. #{budget_data[:current_month] ? "Analysis of categories at risk of overspending based on current progress." : "Analysis of categories that exceeded their budgets."}
-      3. Insights from the top expenses contributing to overspending and their impact.
+        Again please consider the monthly frequencies.
+        When providing analysis, please give a direction and talk factual numbers and data."
+      else
+        "Please provide:
 
-      For categories not mentioned in the overspending analysis, simply say "good job" if applicable.
+        1. a comparison of the current month's expenses to the previous month's expenses, what categories were higher than the previous month.
+        2. What categories went over budget?
+        3. What expenses were to cause of either getting over budget or over the previous month."
+
+      end}
+
       Keep the analysis brief and focused on overspending issues.
-      Please keep the word count under 250 words.
+      Please keep the word count under 200 words.
       Use markdown formatting for better readability.
     PROMPT
   end

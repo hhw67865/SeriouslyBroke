@@ -21,7 +21,9 @@ const useAxiosGet = (url, session, dependencies = []) => {
       session,
     )
       .then((res) => {
-        setData(res.data);
+        if (JSON.stringify(res.data) !== JSON.stringify(data)) {
+          setData(res.data);
+        }
         setLoading(false);
       })
       .catch((err) => {

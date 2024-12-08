@@ -48,4 +48,13 @@ class User < ApplicationRecord
       category.total_expenses(month, year) > category.minimum_amount && category.minimum_amount > 0
     end
   end
+
+  def all_expenses(month, year)
+    start_date = Date.new(year, month, 1).beginning_of_month
+    end_date = start_date.end_of_month
+    eleven_months_ago = start_date - 11.months
+
+    expenses.where(date: eleven_months_ago..end_date)
+            .where("date >= ? OR frequency = ?", start_date, 2)
+  end
 end

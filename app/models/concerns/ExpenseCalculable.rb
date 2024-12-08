@@ -12,7 +12,7 @@ module ExpenseCalculable
 
     # Annual expenses
     annual_expenses = expenses.where(frequency: 2)
-                              .where("date > ? AND date <= ?", end_date - 11.months, end_date)
+                              .where("date > ? AND date <= ?", end_date - 1.year, end_date)
                               .sum("amount / 12.0")
 
     regular_expenses + annual_expenses
