@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Errors from "../../../components/errors/Errors";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
+import { ApiContext } from "../../../context/ApiContext";
 
-const AddAssetForm = ({ setShowForm, session, assetType, getAssetTypes }) => {
+const AddAssetForm = ({ setShowForm, assetType }) => {
+  const apiCalls = useContext(ApiContext);
   const [name, setName] = useState("");
   const [errors, setErrors] = useState(null);
 
@@ -21,10 +23,10 @@ const AddAssetForm = ({ setShowForm, session, assetType, getAssetTypes }) => {
         url: "/api/assets",
         data: { name, asset_type_id: assetType.id },
       },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        getAssetTypes.updateData();
+        apiCalls.assetTypes.updateData();
         setName("");
         setShowForm(false);
       })

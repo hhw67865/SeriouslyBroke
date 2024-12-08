@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Errors from "../../../components/errors/Errors";
 import AssetTypeCard from "./AssetTypeCard";
 import formatMoney from "../../../utils/moneyFormatter";
 import AddAssetTypeForm from "./AddAssetTypeForm";
+import { ApiContext } from "../../../context/ApiContext";
 
-const AssetTypeContainer = ({ session, getAssetTypes, setAssetTypeId }) => {
+const AssetTypeContainer = ({ setAssetTypeId }) => {
+  const apiCalls = useContext(ApiContext);
+
   const [showForm, setShowForm] = useState(false);
   const [errors, setErrors] = useState(null);
 
-  const totalAssetsValue = getAssetTypes.data.reduce(
+  const totalAssetsValue = apiCalls.assetTypes.data.reduce(
     (total, type) => total + parseFloat(type.total_value),
     0,
   );
@@ -21,7 +24,7 @@ const AssetTypeContainer = ({ session, getAssetTypes, setAssetTypeId }) => {
         </h1>
       </div>
       <div className="grid grid-cols-1 gap-4">
-        {getAssetTypes.data.map((type) => (
+        {apiCalls.assetTypes.data.map((type) => (
           <AssetTypeCard
             key={type.id}
             type={type}
@@ -30,8 +33,6 @@ const AssetTypeContainer = ({ session, getAssetTypes, setAssetTypeId }) => {
         ))}
         {showForm && (
           <AddAssetTypeForm
-            session={session}
-            getAssetTypes={getAssetTypes}
             setErrors={setErrors}
             setShowForm={setShowForm}
           />

@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class BudgetStatusService
+  require 'net/http'
+  require 'json'
+
   def initialize(user, month, year)
     @user = user
     @month = month
     @year = year
+    @api_key = ENV['OPENAI_SECRET_KEY']
   end
 
   def self.call(user, month, year)
@@ -12,121 +16,100 @@ class BudgetStatusService
   end
 
   def call
-    {
-      current_month: current_month?,
-      status: budget_status,
-      current_budget:,
-      total_budget:,
-      total_expenses:,
-      total_income:,
-      exceeding_categories: format_categories,
-      missing_budget_categories: user.categories.where(minimum_amount: [0, nil]).pluck(:name),
-      graph_data: total_expenses_by_day,
-      expenses_pie: expense_per_category,
-      income_pie: income_per_source
-    }
+    if month == 1
+      previous_month = 12
+      previous_year = year - 1
+    else
+      previous_month = month - 1
+      previous_year = year
+    end
+
+    generate_summary(data_for_prompt)
   end
 
   private
 
-  attr_reader :user, :month, :year
+  attr_reader :user, :month, :year, :api_key
 
-  def total_expenses_by_day
-    expenses_by_day = fetch_expenses_by_day
-    running_total = BigDecimal('0')
-    days_in_month.map do |day|
-      running_total += BigDecimal(expenses_by_day[day] || '0')
-      {
-        date: I18n.l(day, format: '%-m/%-d'),
-        total: (day > Time.zone.today ? nil : running_total.round(2).to_f),
-        budget: (daily_budget * day.day).round(2).to_f
-      }
+  def data_for_prompt
+    previous_month = month == 1 ? 12 : month - 1
+    previous_year = month == 1 ? year - 1 : year
+
+    {
+      expenses: user.all_expenses(month, year),
+      previous_expenses: user.all_expenses(previous_month, previous_year),
+      categories: user.categories,
+      current_month: month == Date.today.month && year == Date.today.year,
+      days_left: (Date.new(year, month, -1) - Date.today).to_i
+    }
+  end
+
+  def generate_summary(data)
+    uri = URI('https://api.openai.com/v1/chat/completions')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(uri)
+    request['Content-Type'] = 'application/json'
+    request['Authorization'] = "Bearer #{api_key}"
+
+    request.body = {
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: 'You are a helpful financial advisor providing concise budget summaries.' },
+        { role: 'user', content: create_prompt(data) }
+      ],
+      temperature: 0.2,
+      max_tokens: 350
+    }.to_json
+
+    response = http.request(request)
+    JSON.parse(response.body).dig('choices', 0, 'message', 'content')
+  end
+
+  def create_prompt(data)
+    if data[:expenses].count.zero?
+      return "No expenses or budgets set. Please add expenses and set category budgets for analysis."
     end
-  end
 
-  def fetch_expenses_by_day
-    user.expenses
-        .where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year)
-        .group("date")
-        .sum(:amount)
-        .transform_keys(&:to_date)
-  end
+    <<~PROMPT
+      Provide a concise budget analysis for #{month} #{year}:
 
-  def days_in_month
-    (Date.new(year, month, 1)..Date.new(year, month, -1))
-  end
+      Here are the categories for this user with their budgets:
+      #{data[:categories].map { |c| "- #{c.name}: $#{c.minimum_amount}" }.join("\n")}
 
-  def daily_budget
-    BigDecimal(total_budget) / days_in_month.count
-  end
+      Here are the expenses for the month:
+      #{data[:expenses].map { |e| "- #{e.name}: $#{e.amount}. Frequency: #{e.frequency}. Category: #{e.category.name}. date: #{e.date}" }.join("\n")}
 
-  def current_month?
-    month == Time.zone.today.month && year == Time.zone.today.year
-  end
+      Here are the expenses for the previous month:
+      #{data[:previous_expenses].map { |e| "- #{e.name}: $#{e.amount}. Frequency: #{e.frequency}. Category: #{e.category.name}. date: #{e.date}" }.join("\n")}
 
-  def percent_of_month
-    Time.zone.today.day / Time.zone.today.end_of_month.day.to_f
-  end
+      Note that annual expenses are prorated each month.
 
-  def total_budget
-    @total_budget ||= user.total_budget(month, year)
-  end
+      #{if data[:current_month]
+        "Please note that the current month is not yet complete and there are still #{data[:days_left]} days left in the month.
+        Also consider that monthly frequencies will only happen once a month, so if a category's budget is close to being spent but the main expense contributing to the category is a monthly expense, it may not be overspent yet.
+        Please provide:
 
-  def current_budget
-    current_month? ? (BigDecimal(total_budget) * percent_of_month).to_f : total_budget
-  end
+        1. Tell the user how much they should be aiming to spend per week in the remaining days of the month to stay on track to meet their budget goals. Please look at the previous month trend on the habits of the user's expenses when analyzing this.
+        2. What categories are trending higher than the previous month based on the day.
+        3. An analysis of the categories that are at risk of overspending based on the current progress and the expenses that are contributing to the category. Again please consider the monthly frequencies. Please look at the previous month trend when analyzing the risk of overspending.
+        4. What expenses should I expect and prepare for in the upcoming days?
 
-  def total_expenses
-    @total_expenses ||= user.total_expenses(month, year)
-  end
+        Again please consider the monthly frequencies.
+        When providing analysis, please give a direction and talk factual numbers and data."
+      else
+        "Please provide:
 
-  def total_income
-    @total_income ||= user.total_income(month, year)
-  end
+        1. a comparison of the current month's expenses to the previous month's expenses, what categories were higher than the previous month.
+        2. What categories went over budget?
+        3. What expenses were to cause of either getting over budget or over the previous month."
 
-  def budget_status
-    total_expenses <= current_budget ? 'You are within your budget!' : 'You have exceeded your budget!'
-  end
+      end}
 
-  def exceeding_categories
-    @exceeding_categories ||= user.exceeding_categories(month, year)
-  end
-
-  def format_categories
-    exceeding_categories.map do |category|
-      monthly_expense = category.total_expense(month, year)
-      min_amount = current_month? ? category.minimum_amount * percent_of_month : category.minimum_amount
-
-      {
-        name: category.name,
-        total_expense: monthly_expense,
-        minimum_amount: category.minimum_amount,
-        overage: monthly_expense - min_amount
-      }
-    end
-  end
-
-  def expense_per_category
-    user.categories.map do |category|
-      total_expense = category.total_expense(month, year)
-      next if total_expense.zero?
-  
-      {
-        name: category.name,
-        total_expense:
-      }
-    end.compact
-  end
-
-  def income_per_source
-    user.income_sources.map do |source|
-      total_income = source.total_income(month, year)
-      next if total_income.zero?
-
-      {
-        name: source.name,
-        total_income:
-      }
-    end.compact
+      Keep the analysis brief and focused on overspending issues.
+      Please keep the word count under 200 words.
+      Use markdown formatting for better readability.
+    PROMPT
   end
 end

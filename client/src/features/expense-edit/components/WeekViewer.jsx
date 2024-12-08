@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import WeekSelector from "./WeekSelector";
 import WeekViewerColumn from "./WeekViewerColumn";
 import WeeklyTotal from "./WeeklyTotal";
+import { ApiContext } from "../../../context/ApiContext";
 
 const WeekViewer = ({
-  session,
-  getExpenses,
   startOfWeek,
   endOfWeek,
   currentWeek,
   setCurrentWeek,
   weeklyExpenses,
 }) => {
+  const apiCalls = useContext(ApiContext);
   const [editingExpenseId, setEditingExpenseId] = useState(null);
 
   const weekColumns = Array.from({ length: 7 }, (_, i) => {
@@ -22,19 +22,17 @@ const WeekViewer = ({
       month: "short",
       day: "numeric",
     });
-    const dailyExpenses = getExpenses.data.filter(
+    const dailyExpenses = apiCalls.expenses.data.filter(
       (expense) => expense.date === date.toISOString().split("T")[0],
     );
 
     return (
       <WeekViewerColumn
         key={i}
-        session={session}
         formattedDate={formattedDate}
         dailyExpenses={dailyExpenses}
         editingExpenseId={editingExpenseId}
         setEditingExpenseId={setEditingExpenseId}
-        getExpenses={getExpenses}
       />
     );
   });

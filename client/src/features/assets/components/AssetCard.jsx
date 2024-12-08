@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import formatMoney from "../../../utils/moneyFormatter";
 import TransactionCard from "./TransactionCard";
 import TransactionForm from "./TransactionForm";
 import TransactionsPagination from "./TransactionsPagination";
+import { ApiContext } from "../../../context/ApiContext";
 
-const AssetCard = ({ asset, getTransactions, session, getAssetTypes }) => {
+const AssetCard = ({ asset }) => {
+  const apiCalls = useContext(ApiContext);
   const [showTransactions, setShowTransactions] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const assetTransactions = getTransactions.data?.filter(
+  const assetTransactions = apiCalls.transactions.data?.filter(
     (transaction) => transaction.asset.id === asset.id,
   );
   const transactionsPerPage = 5;
@@ -44,9 +46,6 @@ const AssetCard = ({ asset, getTransactions, session, getAssetTypes }) => {
         <TransactionForm
           asset={asset}
           setShowForm={setShowForm}
-          session={session}
-          getTransactions={getTransactions}
-          getAssetTypes={getAssetTypes}
         />
       )}
 
@@ -56,9 +55,6 @@ const AssetCard = ({ asset, getTransactions, session, getAssetTypes }) => {
             <TransactionCard
               key={transaction.id}
               transaction={transaction}
-              session={session}
-              getTransactions={getTransactions}
-              getAssetTypes={getAssetTypes}
             />
           ))}
           <TransactionsPagination

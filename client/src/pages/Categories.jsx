@@ -1,27 +1,16 @@
-import { SessionContext } from "../context/SessionContext";
-import { useContext } from "react";
 import {
   CategoryContainer,
   CategorySelectionContainer,
 } from "../features/category";
 
-const Categories = ({ getCategories, getExpenses }) => {
-  const session = useContext(SessionContext);
-
+const Categories = () => {
   return (
-    <div className="container mx-auto flex flex-col px-4 md:flex-row md:space-x-4">
-      <div className="w-full md:w-1/3">
-        <CategorySelectionContainer
-          session={session}
-          getCategories={getCategories}
-        />
+    <div className="container mx-auto flex flex-col px-4 md:flex-row md:space-x-4 h-screen">
+      <div className="w-full md:w-1/3 mb-4 md:mb-0">
+        <CategorySelectionContainer/>
       </div>
       <div className="w-full md:w-2/3">
-        <CategoryContainer
-          session={session}
-          getCategories={getCategories}
-          getExpenses={getExpenses}
-        />
+        <CategoryContainer/>
       </div>
     </div>
   );

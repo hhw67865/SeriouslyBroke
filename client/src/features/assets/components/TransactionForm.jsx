@@ -1,15 +1,11 @@
 import Errors from "../../../components/errors/Errors";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ApiContext } from "../../../context/ApiContext";
 
-const TransactionForm = ({
-  asset,
-  setShowForm,
-  session,
-  getTransactions,
-  getAssetTypes,
-}) => {
+const TransactionForm = ({ asset, setShowForm }) => {
+  const apiCalls = useContext(ApiContext);
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
     date: "",
@@ -31,11 +27,11 @@ const TransactionForm = ({
     e.preventDefault();
     fetchAxios(
       { method: "POST", url: "/api/asset_transactions", data: formData },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        getTransactions.updateData();
-        getAssetTypes.updateData();
+        apiCalls.transactions.updateData();
+        apiCalls.assetTypes.updateData();
         setShowForm(false);
         setFormData({
           date: "",

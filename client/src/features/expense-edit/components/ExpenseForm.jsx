@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import Errors from "../../../components/errors/Errors";
+import { ApiContext } from "../../../context/ApiContext";
 
-const ExpenseForm = ({ session, getExpenses, getCategories }) => {
+const frequencyOptions = [
+  { value: 0, label: "Daily" },
+  { value: 1, label: "Monthly" },
+  { value: 2, label: "Annual" },
+];
+
+const ExpenseForm = () => {
+  const apiCalls = useContext(ApiContext);
   const [expenses, setExpenses] = useState([
-    { name: "", category_id: "", amount: "" },
+    { name: "", category_id: "", amount: "", frequency: 0 },
   ]);
   const [date, setDate] = useState("");
   const [errors, setErrors] = useState(null);
@@ -16,14 +24,19 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
       values[index].name = event.target.value;
     } else if (event.target.name === "category") {
       values[index].category_id = event.target.value;
-    } else {
+    } else if (event.target.name === "amount") {
       values[index].amount = event.target.value;
+    } else if (event.target.name === "frequency") {
+      values[index].frequency = parseInt(event.target.value);
     }
     setExpenses(values);
   };
 
   const handleAddFields = () => {
-    setExpenses([...expenses, { name: "", category_id: "", amount: "" }]);
+    setExpenses([
+      ...expenses,
+      { name: "", category_id: "", amount: "", frequency: 0 },
+    ]);
   };
 
   const handleRemoveFields = (index) => {
@@ -40,17 +53,17 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
     }));
     fetchAxios(
       { method: "POST", url: "/api/expenses", data: { expenses: data } },
-      session,
+      apiCalls.session,
     )
       .then(() => {
-        setExpenses([{ name: "", category_id: "", amount: "" }]);
-        getExpenses.updateData();
-        getCategories.updateData();
+        setExpenses([{ name: "", category_id: "", amount: "", frequency: 0 }]);
+        apiCalls.expenses.updateData();
+        apiCalls.categories.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };
 
-  const sortedCategories = getCategories.data?.sort((a, b) => {
+  const sortedCategories = apiCalls.categories.data?.sort((a, b) => {
     if (a.name < b.name) {
       return -1;
     } else {
@@ -121,6 +134,25 @@ const ExpenseForm = ({ session, getExpenses, getCategories }) => {
                 required
                 className="rounded border p-2"
               />
+            </div>
+            <div className="flex w-1/4 flex-col">
+              <label htmlFor="frequency" className="mb-1">
+                Frequency
+              </label>
+              <select
+                id="frequency"
+                name="frequency"
+                value={input.frequency}
+                onChange={(event) => handleChange(idx, event)}
+                required
+                className="rounded border p-2"
+              >
+                {frequencyOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               type="button"

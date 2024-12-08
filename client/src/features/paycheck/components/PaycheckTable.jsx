@@ -7,20 +7,22 @@ import {
   TableRow,
   TablePagination,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatMoney from "../../../utils/moneyFormatter";
+import { ApiContext } from "../../../context/ApiContext";
 
-const PaycheckTable = ({ getPaychecks, session }) => {
+const PaycheckTable = () => {
+  const apiCalls = useContext(ApiContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredPaychecks, setFilteredPaychecks] = useState(getPaychecks.data);
+  const [filteredPaychecks, setFilteredPaychecks] = useState(apiCalls.paychecks.data);
 
   useEffect(() => {
     setFilteredPaychecks(
-      getPaychecks.data.filter((paycheck) => {
+      apiCalls.paychecks.data.filter((paycheck) => {
         return (
           paycheck.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
           paycheck.income_source.name
@@ -29,7 +31,7 @@ const PaycheckTable = ({ getPaychecks, session }) => {
         );
       }),
     );
-  }, [getPaychecks.data, searchTerm]);
+  }, [apiCalls.paychecks.data, searchTerm]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -46,9 +48,9 @@ const PaycheckTable = ({ getPaychecks, session }) => {
       : 0;
 
   const handleDelete = (id) => {
-    fetchAxios({ method: "DELETE", url: `/api/paychecks/${id}` }, session).then(
+    fetchAxios({ method: "DELETE", url: `/api/paychecks/${id}` }, apiCalls.session).then(
       () => {
-        getPaychecks.updateData();
+        apiCalls.paychecks.updateData();
       },
     );
   };
@@ -111,7 +113,7 @@ const PaycheckTable = ({ getPaychecks, session }) => {
         </Table>
         <TablePagination
           component="div"
-          count={getPaychecks.data.length}
+          count={apiCalls.paychecks.data.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}

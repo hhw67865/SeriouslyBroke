@@ -7,8 +7,11 @@ import {
   Legend,
   Bar,
 } from "recharts";
+import { ApiContext } from "../../../context/ApiContext";
+import { useContext } from "react";
 
-const MonthlyChart = ({ incomeSummary, setMonths, months }) => {
+const MonthlyChart = ({ setMonths, months }) => {
+  const apiCalls = useContext(ApiContext);
   const handleChange = (event) => {
     setMonths(Number(event.target.value));
   };
@@ -57,7 +60,7 @@ const MonthlyChart = ({ incomeSummary, setMonths, months }) => {
       <BarChart
         width={1200}
         height={300}
-        data={incomeSummary.graph_data}
+        data={apiCalls.incomeSummary.data.graph_data}
         margin={{
           top: 20,
           right: 30,
@@ -70,7 +73,7 @@ const MonthlyChart = ({ incomeSummary, setMonths, months }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        {incomeSummary.income_sources.map((source, i) => {
+        {apiCalls.incomeSummary.data.income_sources.map((source, i) => {
           return (
             <Bar
               key={i}

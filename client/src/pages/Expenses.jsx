@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { WeekViewer, ExpenseForm } from "../features/expense-edit";
-import { SessionContext } from "../context/SessionContext";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { InformationContainer } from "../features/weekly-expense-info";
+import { ApiContext } from "../context/ApiContext";
 
-const Expenses = ({ getExpenses, getCategories }) => {
-  const session = useContext(SessionContext);
-
+const Expenses = () => {
+  const apiCalls = useContext(ApiContext);
   const [currentWeek, setCurrentWeek] = useState(() => {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -23,7 +22,7 @@ const Expenses = ({ getExpenses, getCategories }) => {
   endOfWeek.setDate(endOfWeek.getDate() + 6);
   endOfWeek.setHours(23, 59, 59, 999); // Set the time to the end of the day to avoid DST issues
 
-  const weeklyExpenses = getExpenses.data.filter((expense) => {
+  const weeklyExpenses = apiCalls.expenses.data.filter((expense) => {
     const dateParts = expense.date.split("-");
     const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     date.setHours(12, 0, 0, 0); // Set the time to midday to avoid DST issues
@@ -39,8 +38,6 @@ const Expenses = ({ getExpenses, getCategories }) => {
         Edit Categories/Budget
       </Link>
       <WeekViewer
-        session={session}
-        getExpenses={getExpenses}
         startOfWeek={startOfWeek}
         endOfWeek={endOfWeek}
         currentWeek={currentWeek}
@@ -48,11 +45,7 @@ const Expenses = ({ getExpenses, getCategories }) => {
         weeklyExpenses={weeklyExpenses}
       />
       <div className="container flex flex-col place-content-between gap-10 md:flex-row">
-        <ExpenseForm
-          session={session}
-          getCategories={getCategories}
-          getExpenses={getExpenses}
-        />
+        <ExpenseForm/>
         <InformationContainer weeklyExpenses={weeklyExpenses} />
       </div>
     </div>

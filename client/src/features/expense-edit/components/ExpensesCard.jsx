@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatMoney from "../../../utils/moneyFormatter";
 import Errors from "../../../components/errors/Errors";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
+import { ApiContext } from "../../../context/ApiContext";
 
 const ExpensesCard = ({
   editingExpenseId,
   setEditingExpenseId,
   expense,
-  session,
-  getExpenses,
 }) => {
+  const apiCalls = useContext(ApiContext);
   const [errors, setErrors] = useState(null);
   const [showButtons, setShowButtons] = useState(false);
   const [editExpense, setEditExpense] = useState({
@@ -19,9 +19,9 @@ const ExpensesCard = ({
   });
 
   function handleDelete(id) {
-    fetchAxios({ method: "DELETE", url: `/api/expenses/${id}` }, session).then(
+    fetchAxios({ method: "DELETE", url: `/api/expenses/${id}` }, apiCalls.session).then(
       () => {
-        getExpenses.updateData();
+        apiCalls.expenses.updateData();
       },
     );
   }
@@ -38,12 +38,12 @@ const ExpensesCard = ({
         url: `/api/expenses/${editingExpenseId}`,
         data: editExpense,
       },
-      session,
+      apiCalls.session,
     )
       .then(() => {
         setEditingExpenseId(null);
         setEditExpense({ name: "", amount: "" });
-        getExpenses.updateData();
+        apiCalls.expenses.updateData();
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   }

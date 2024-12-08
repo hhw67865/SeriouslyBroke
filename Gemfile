@@ -54,8 +54,8 @@ group :development do
 end
 
 gem "active_model_serializers"
-gem 'clerk-sdk-ruby', require: "clerk"
 gem "annotate", "~> 3.2"
+gem 'clerk-sdk-ruby', require: "clerk"
 gem "jsonapi-authorization", "~> 3.0"
 gem "jsonapi-rails"
 gem "jsonapi-resources", "~> 0.10.7"

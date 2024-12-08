@@ -9,13 +9,20 @@ Rails.application.routes.draw do
         get 'week', to: 'expenses#week'
       end
     end
-    resources :categories
-        resources :asset_transactions
+    resources :categories do
+      collection do
+        post 'reorder', to: 'categories#reorder'
+      end
+    end
+    resources :asset_transactions
     resources :assets
     resources :asset_types
-    get 'monthly_summary', to: 'summary#monthly_summary'
+    get 'budget_status', to: 'budget_statuses#budget_status'
+    get 'budget_status/refresh', to: 'budget_statuses#refresh'
     get 'income_summary', to: 'summary#income_summary'
     get 'yearly_average_income', to: 'users#yearly_average_income'
+    get 'category_summary', to: 'summary#category_summary'
+    get 'graph_data', to: 'summary#graph_data'
     resources :users, only: [:index]
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

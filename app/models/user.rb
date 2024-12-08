@@ -1,5 +1,6 @@
 class User < ApplicationRecord
-  has_one :clerk_user, foreign_key: 'id', primary_key: 'clerk_user_id'
+  include ExpenseCalculable
+
   has_many :categories, dependent: :destroy
   has_many :expenses, through: :categories
   has_many :income_sources, dependent: :destroy
@@ -8,19 +9,20 @@ class User < ApplicationRecord
   has_many :asset_types, dependent: :destroy
   has_many :assets, through: :asset_types
   has_many :asset_transactions, through: :assets
+  has_many :budget_statuses, dependent: :destroy
 
   after_create :create_default_categories
   after_create :create_default_asset_types
 
-  validates :clerk_user_id, uniqueness: true
+  validates :clerk_user_id, presence: true, uniqueness: true
 
   DEFAULT_CATEGORIES = ["Housing", "Transportation", "Food", "Utilities", "Medical & Healthcare", "Fitness", "Debt Payments", "Personal Care", "Entertainment", "Pets", "Clothes", "Miscellaneous"]
   DEFAULT_ASSET_TYPES = ["Cash", "Checking", "Savings", "Investments", "Real Estate"]
 
   def create_default_categories
     Category.insert_all(
-      DEFAULT_CATEGORIES.map do |category|
-        { name: category, user_id: id }
+      DEFAULT_CATEGORIES.map.with_index do |category, index|
+        { name: category, user_id: id, order: index + 1 }
       end
     )
   end
@@ -37,17 +39,22 @@ class User < ApplicationRecord
     categories.sum(:minimum_amount)
   end
 
-  def total_expenses(month, year)
-    expenses.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
-  end
-
   def total_income(month, year)
     paychecks.where("EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?", month, year).sum(:amount)
   end
 
   def exceeding_categories(month, year)
     categories.select do |category|
-      category.total_expense(month, year) > category.minimum_amount && category.minimum_amount > 0
+      category.total_expenses(month, year) > category.minimum_amount && category.minimum_amount > 0
     end
+  end
+
+  def all_expenses(month, year)
+    start_date = Date.new(year, month, 1).beginning_of_month
+    end_date = start_date.end_of_month
+    eleven_months_ago = start_date - 11.months
+
+    expenses.where(date: eleven_months_ago..end_date)
+            .where("date >= ? OR frequency = ?", start_date, 2)
   end
 end

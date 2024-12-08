@@ -15,8 +15,11 @@
     "@mui/icons-material": "^5.14.19",
     "@uiw/react-color": "^2.0.5",
     "axios": "^1.5.1",
+    "caniuse-lite": "",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.4.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.17.0",
     "react-select": "^5.7.7",
     "recharts": "^2.12.2"
