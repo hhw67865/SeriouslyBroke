@@ -2,10 +2,13 @@ import { useState, useContext } from "react";
 import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import { ApiContext } from "../../../context/ApiContext";
+import { useSearchParams } from "react-router-dom";
 
 const AddCategoryForm = ({ setErrors, setShowForm }) => {
   const apiCalls = useContext(ApiContext);
   const [name, setName] = useState("");
+  const [, setSearchParams] = useSearchParams();
+
 
   const handleForm = (e) => {
     e.preventDefault();
@@ -17,6 +20,7 @@ const AddCategoryForm = ({ setErrors, setShowForm }) => {
         apiCalls.categories.updateData();
         setName("");
         setShowForm(false);
+        setSearchParams({ category: name });
       })
       .catch((err) => setErrors(formatAxiosErrors(err)));
   };

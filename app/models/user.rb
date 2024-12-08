@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   include ExpenseCalculable
 
-  has_one :clerk_user, foreign_key: 'id', primary_key: 'clerk_user_id'
   has_many :categories, dependent: :destroy
   has_many :expenses, through: :categories
   has_many :income_sources, dependent: :destroy
@@ -15,15 +14,15 @@ class User < ApplicationRecord
   after_create :create_default_categories
   after_create :create_default_asset_types
 
-  validates :clerk_user_id, uniqueness: true
+  validates :clerk_user_id, presence: true, uniqueness: true
 
   DEFAULT_CATEGORIES = ["Housing", "Transportation", "Food", "Utilities", "Medical & Healthcare", "Fitness", "Debt Payments", "Personal Care", "Entertainment", "Pets", "Clothes", "Miscellaneous"]
   DEFAULT_ASSET_TYPES = ["Cash", "Checking", "Savings", "Investments", "Real Estate"]
 
   def create_default_categories
     Category.insert_all(
-      DEFAULT_CATEGORIES.map do |category|
-        { name: category, user_id: id }
+      DEFAULT_CATEGORIES.map.with_index do |category, index|
+        { name: category, user_id: id, order: index + 1 }
       end
     )
   end

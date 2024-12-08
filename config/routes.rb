@@ -9,7 +9,11 @@ Rails.application.routes.draw do
         get 'week', to: 'expenses#week'
       end
     end
-    resources :categories
+    resources :categories do
+      collection do
+        post 'reorder', to: 'categories#reorder'
+      end
+    end
     resources :asset_transactions
     resources :assets
     resources :asset_types

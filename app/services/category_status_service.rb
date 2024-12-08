@@ -14,7 +14,7 @@ class CategoryStatusService
     {
       current_month: Date.new(year, month, 1).strftime("%B %Y"),
       previous_month: Date.new(year, month, 1).prev_month.strftime("%B %Y"),
-      categories: user.categories.map do |category|
+      categories: user.categories.order(:order).map do |category|
         {
           name: category.name,
           total_expenses: category.total_expenses(month, year),

@@ -23,12 +23,13 @@ const SummaryChart = () => {
             domain={[
               0,
               Math.ceil(
-                Math.max(apiCalls.graphData.data.total_budget, apiCalls.graphData.data.total_expenses) / 100,
+                Math.max(apiCalls.graphData.data.total_budget, apiCalls.graphData.data.total_expenses, apiCalls.graphData.data.prev_total_expenses) / 100,
               ) * 100,
             ]}
           />
-          <Line type="monotone" dataKey="total" stroke="red" dot={false} />
-          <Line type="monotone" dataKey="budget" stroke="#5F741D" dot={false} />
+          <Line type="monotone" dataKey="total" stroke="red" dot={false} name="Current Month" />
+          <Line type="monotone" dataKey="budget" stroke="#5F741D" dot={false} name="Budget" />
+          <Line type="monotone" dataKey="prev_total" stroke="#A9C4EB" strokeDasharray="5 5" strokeWidth={2} dot={false} opacity={0.6} name="Previous Month" />
           <Tooltip />
           <Legend />
         </LineChart>

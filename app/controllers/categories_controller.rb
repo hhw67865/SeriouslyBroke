@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
 
   # GET /categories
   def index
-    @categories = @current_user.categories.order('LOWER(name)')
+    @categories = @current_user.categories.order(:order)
 
     render json: @categories
   end
@@ -37,6 +37,16 @@ class CategoriesController < ApplicationController
   # DELETE /categories/1
   def destroy
     @category.destroy!
+  end
+
+  def reorder
+    service = CategoryReorderService.new(@current_user)
+    
+    if service.reorder(params[:category_ids])
+      head :ok
+    else
+      render json: { error: "An error occurred while reordering categories" }, status: :unprocessable_entity
+    end
   end
 
   private

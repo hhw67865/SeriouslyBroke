@@ -14,6 +14,7 @@ class GraphService
       expenses_graph_data:,
       total_budget:,
       total_expenses:,
+      prev_total_expenses:,
       total_income:
     }
   end
@@ -23,55 +24,66 @@ class GraphService
   attr_reader :user, :month, :year
 
   def expenses_graph_data
-    expenses_by_day = fetch_expenses_by_day
+    current_expenses = fetch_expenses_by_day(month, year)
+    prev_month = month == 1 ? 12 : month - 1
+    prev_year = month == 1 ? year - 1 : year
+    prev_expenses = fetch_expenses_by_day(prev_month, prev_year)
+
     running_total = 0.0
+    prev_running_total = 0.0
+
     days_in_month.map do |day|
-      expense = expenses_by_day[day] || 0
+      expense = current_expenses[day] || 0
+      prev_expense = prev_expenses[day.prev_month] || 0
       running_total += expense
+      prev_running_total += prev_expense
+
       {
         date: I18n.l(day, format: '%-m/%-d'),
         total: (day > Time.zone.today ? nil : running_total.round(2)),
+        prev_total: prev_running_total.round(2),
         budget: total_budget.round(2)
       }
     end
   end
 
-  def fetch_expenses_by_day
+  def fetch_expenses_by_day(month, year)
     start_date = Date.new(year, month, 1)
     end_date = start_date.end_of_month
-  
+
     # Fetch daily and monthly expenses
     regular_expenses = user.expenses
                            .where(frequency: [0, 1])
                            .where(date: start_date..end_date)
                            .group(:date)
                            .sum(:amount)
-  
+
     # Fetch and prorate annual expenses
     annual_expenses = user.expenses
                           .where(frequency: 2)
                           .where("date > ? AND date <= ?", end_date - 11.months, end_date)
                           .select('date, amount / 12.0 as prorated_amount')
-  
+
     # Combine regular and prorated annual expenses
     combined_expenses = regular_expenses.to_h
-  
+
     annual_expenses.each do |expense|
-      expense_date = adjust_annual_expense_date(expense.date, start_date, end_date)
-      combined_expenses[expense_date] ||= 0
-      combined_expenses[expense_date] += expense.prorated_amount.to_f
+      prorate_annual_expense(expense, start_date, end_date, combined_expenses)
     end
-  
+
     combined_expenses.transform_keys(&:to_date)
   end
 
-  def adjust_annual_expense_date(original_date, start_date, end_date)
-    adjusted_date = Date.new(year, month, original_date.day)
-    adjusted_date = end_date if adjusted_date > end_date
-    adjusted_date
-  rescue Date::Error
-    # Handle invalid dates (e.g., February 30th)
-    end_date
+  def prorate_annual_expense(expense, start_date, end_date, combined_expenses)
+    prorated_amount = expense.amount / 12.0
+    expense_day = expense.date.day
+
+    (start_date..end_date).each do |date|
+      if date.day == expense_day || (date == date.at_end_of_month && expense_day > date.day)
+        combined_expenses[date] ||= 0
+        combined_expenses[date] += prorated_amount
+      end
+    end
   end
 
   def days_in_month
@@ -84,6 +96,10 @@ class GraphService
 
   def total_expenses
     @total_expenses ||= user.total_expenses(month, year)
+  end
+
+  def prev_total_expenses
+    month == 1 ? user.total_expenses(12, year - 1) : user.total_expenses(month - 1, year)
   end
 
   def total_income
