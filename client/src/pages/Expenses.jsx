@@ -45,7 +45,7 @@ const Expenses = () => {
         weeklyExpenses={weeklyExpenses}
       />
       <div className="container flex flex-col place-content-between gap-10 md:flex-row">
-        <ExpenseForm/>
+        <ExpenseForm />
         <InformationContainer weeklyExpenses={weeklyExpenses} />
       </div>
     </div>

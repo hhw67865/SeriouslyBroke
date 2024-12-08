@@ -4,7 +4,7 @@ const Errors = ({ errors }) => {
       <div className="text-center text-tertiary-dark" role="alert">
         {errors}
       </div>
-    </>
+    </>;
   }
 
   return (

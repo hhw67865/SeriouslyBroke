@@ -5,11 +5,7 @@ import Errors from "../../../components/errors/Errors";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import { ApiContext } from "../../../context/ApiContext";
 
-const ExpensesCard = ({
-  editingExpenseId,
-  setEditingExpenseId,
-  expense,
-}) => {
+const ExpensesCard = ({ editingExpenseId, setEditingExpenseId, expense }) => {
   const apiCalls = useContext(ApiContext);
   const [errors, setErrors] = useState(null);
   const [showButtons, setShowButtons] = useState(false);
@@ -19,11 +15,12 @@ const ExpensesCard = ({
   });
 
   function handleDelete(id) {
-    fetchAxios({ method: "DELETE", url: `/api/expenses/${id}` }, apiCalls.session).then(
-      () => {
-        apiCalls.expenses.updateData();
-      },
-    );
+    fetchAxios(
+      { method: "DELETE", url: `/api/expenses/${id}` },
+      apiCalls.session,
+    ).then(() => {
+      apiCalls.expenses.updateData();
+    });
   }
 
   function handleExpenseChange(e) {

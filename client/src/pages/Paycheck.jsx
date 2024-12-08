@@ -3,7 +3,7 @@ import { PaycheckForm, PaycheckTable } from "../features/paycheck";
 const Paycheck = () => {
   return (
     <>
-      <PaycheckForm/>
+      <PaycheckForm />
       <PaycheckTable />
     </>
   );

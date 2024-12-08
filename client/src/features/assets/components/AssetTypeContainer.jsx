@@ -32,10 +32,7 @@ const AssetTypeContainer = ({ setAssetTypeId }) => {
           />
         ))}
         {showForm && (
-          <AddAssetTypeForm
-            setErrors={setErrors}
-            setShowForm={setShowForm}
-          />
+          <AddAssetTypeForm setErrors={setErrors} setShowForm={setShowForm} />
         )}
       </div>
       <div className="mt-8 flex flex-col items-center justify-center">

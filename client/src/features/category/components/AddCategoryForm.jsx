@@ -9,7 +9,6 @@ const AddCategoryForm = ({ setErrors, setShowForm }) => {
   const [name, setName] = useState("");
   const [, setSearchParams] = useSearchParams();
 
-
   const handleForm = (e) => {
     e.preventDefault();
     fetchAxios(

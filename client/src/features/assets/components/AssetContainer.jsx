@@ -19,16 +19,10 @@ const AssetContainer = ({ assetTypeId }) => {
           <AssetHeader assetType={assetType} setShowForm={setShowForm} />
           <div className="grid grid-cols-1 gap-4 pt-4">
             {assetType.assets.map((asset) => (
-              <AssetCard
-                key={asset.id}
-                asset={asset}
-              />
+              <AssetCard key={asset.id} asset={asset} />
             ))}
             {showForm && (
-              <AddAssetForm
-                setShowForm={setShowForm}
-                assetType={assetType}
-              />
+              <AddAssetForm setShowForm={setShowForm} assetType={assetType} />
             )}
           </div>
         </>

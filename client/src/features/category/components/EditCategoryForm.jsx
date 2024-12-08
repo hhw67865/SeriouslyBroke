@@ -6,10 +6,7 @@ import fetchAxios from "../../../lib/fetchAxios";
 import Errors from "../../../components/errors/Errors";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 
-const EditCategoryForm = ({
-  category,
-  setShowForm,
-}) => {
+const EditCategoryForm = ({ category, setShowForm }) => {
   const apiCalls = useContext(ApiContext);
   const [hsva, setHsva] = useState(
     category.color ? hexToHsva(category.color) : { h: 214, s: 43, v: 90, a: 1 },

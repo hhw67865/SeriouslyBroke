@@ -57,9 +57,7 @@ const CategoryContainer = () => {
                       Delete
                     </button>
                     <hr className="my-4 border-gray-200" />
-                    <ExpensesContainer
-                      category={category}
-                    />
+                    <ExpensesContainer category={category} />
                   </div>
                 </>
               ) : (

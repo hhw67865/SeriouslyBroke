@@ -3,10 +3,7 @@ import fetchAxios from "../../../lib/fetchAxios";
 import formatAxiosErrors from "../../../utils/formatAxiosErrors";
 import { ApiContext } from "../../../context/ApiContext";
 
-const AddAssetTypeForm = ({
-  setShowForm,
-  setErrors,
-}) => {
+const AddAssetTypeForm = ({ setShowForm, setErrors }) => {
   const apiCalls = useContext(ApiContext);
   const [name, setName] = useState("");
 

@@ -42,20 +42,12 @@ const AssetCard = ({ asset }) => {
           Add Transaction
         </button>
       </div>
-      {showForm && (
-        <TransactionForm
-          asset={asset}
-          setShowForm={setShowForm}
-        />
-      )}
+      {showForm && <TransactionForm asset={asset} setShowForm={setShowForm} />}
 
       {showTransactions && (
         <div className="grid grid-cols-1 gap-4 pt-4">
           {currentTransactions.map((transaction) => (
-            <TransactionCard
-              key={transaction.id}
-              transaction={transaction}
-            />
+            <TransactionCard key={transaction.id} transaction={transaction} />
           ))}
           <TransactionsPagination
             setCurrentPage={setCurrentPage}

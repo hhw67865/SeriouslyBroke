@@ -18,7 +18,9 @@ const PaycheckTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredPaychecks, setFilteredPaychecks] = useState(apiCalls.paychecks.data);
+  const [filteredPaychecks, setFilteredPaychecks] = useState(
+    apiCalls.paychecks.data,
+  );
 
   useEffect(() => {
     setFilteredPaychecks(
@@ -48,11 +50,12 @@ const PaycheckTable = () => {
       : 0;
 
   const handleDelete = (id) => {
-    fetchAxios({ method: "DELETE", url: `/api/paychecks/${id}` }, apiCalls.session).then(
-      () => {
-        apiCalls.paychecks.updateData();
-      },
-    );
+    fetchAxios(
+      { method: "DELETE", url: `/api/paychecks/${id}` },
+      apiCalls.session,
+    ).then(() => {
+      apiCalls.paychecks.updateData();
+    });
   };
 
   return (

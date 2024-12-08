@@ -1,7 +1,6 @@
 import formatMoney from "../../../utils/moneyFormatter";
 import ExpensesCard from "./ExpensesCard";
 
-
 const WeekViewerColumn = ({
   formattedDate,
   dailyExpenses,

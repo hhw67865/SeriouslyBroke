@@ -7,4 +7,13 @@ import Assets from "./Assets";
 import Categories from "./Categories";
 import LoadingPage from "./LoadingPage";
 
-export { Expenses, Home, Income, Summary, Paycheck, Assets, Categories, LoadingPage };
+export {
+  Expenses,
+  Home,
+  Income,
+  Summary,
+  Paycheck,
+  Assets,
+  Categories,
+  LoadingPage,
+};
