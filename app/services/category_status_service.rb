@@ -11,16 +11,19 @@ class CategoryStatusService
   end
 
   def call
+    current_date = Date.new(year, month, 1)
+    previous_date = current_date.prev_month
+
     {
       month:,
       year:,
-      current_month: Date.new(year, month, 1).strftime("%B %Y"),
-      previous_month: Date.new(year, month, 1).prev_month.strftime("%B %Y"),
+      current_month: current_date.strftime("%B %Y"),
+      previous_month: previous_date.strftime("%B %Y"),
       categories: user.categories.order(:order).map do |category|
         {
           name: category.name,
           total_expenses: category.total_expenses(month, year),
-          prev_total_expenses: category.total_expenses(month - 1, year),
+          prev_total_expenses: category.total_expenses(previous_date.month, previous_date.year),
           budget: category.minimum_amount,
         }
       end
