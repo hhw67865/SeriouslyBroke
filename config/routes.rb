@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
+  devise_for :users, skip: [:sessions, :registrations, :passwords]
+
   scope 'api' do
+    post '/login', to: 'sessions#create'
+    delete '/logout', to: 'sessions#destroy'
+    post '/signup', to: 'registrations#create'
+    
+    resources :users, only: [:index, :update] do
+      collection do
+        post :change_password
+      end
+    end
+    
     resources :tasks
     resources :upgrades
     resources :paychecks
@@ -23,7 +35,6 @@ Rails.application.routes.draw do
     get 'yearly_average_income', to: 'users#yearly_average_income'
     get 'category_summary', to: 'summary#category_summary'
     get 'graph_data', to: 'summary#graph_data'
-    resources :users, only: [:index]
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
     # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -33,5 +44,7 @@ Rails.application.routes.draw do
     # Defines the root path route ("/")
     # root "posts#index"
   end
+
   get "*path", to: "fallback#index", constraints: ->(req) { !req.xhr? && req.format.html? }
 end
+

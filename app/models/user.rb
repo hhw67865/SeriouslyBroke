@@ -1,4 +1,8 @@
 class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
   include ExpenseCalculable
 
   has_many :categories, dependent: :destroy
@@ -14,7 +18,11 @@ class User < ApplicationRecord
   after_create :create_default_categories
   after_create :create_default_asset_types
 
-  validates :clerk_user_id, presence: true, uniqueness: true
+  validates :password, presence: true, 
+                      length: { minimum: 8 }, 
+                      format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 
+                               message: "must include at least one lowercase letter, one uppercase letter, and one number" },
+                      if: :password_required?
 
   DEFAULT_CATEGORIES = ["Housing", "Transportation", "Food", "Utilities", "Medical & Healthcare", "Fitness", "Debt Payments", "Personal Care", "Entertainment", "Pets", "Clothes", "Miscellaneous"]
   DEFAULT_ASSET_TYPES = ["Cash", "Checking", "Savings", "Investments", "Real Estate"]
