@@ -3,6 +3,7 @@ import {
   SummaryStatus,
   SummaryChart,
   SummaryTable,
+  YearlySummaryTable,
 } from "../features/summary";
 import { useEffect, useContext } from "react";
 import { ApiContext } from "../context/ApiContext";
@@ -59,6 +60,10 @@ const Summary = ({ summaryMonth, setSummaryMonth }) => {
             <SummaryTable summaryMonth={summaryMonth} />
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 rounded-lg bg-gray-100 p-4 shadow-lg">
+        <YearlySummaryTable />
       </div>
     </div>
   );

@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     get 'yearly_average_income', to: 'users#yearly_average_income'
     get 'category_summary', to: 'summary#category_summary'
     get 'graph_data', to: 'summary#graph_data'
+    get 'yearly_summary', to: 'summary#yearly_summary'
     resources :users, only: [:index]
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

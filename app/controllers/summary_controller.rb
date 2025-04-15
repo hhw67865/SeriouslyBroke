@@ -20,6 +20,10 @@ class SummaryController < ApplicationController
     render json: CategoryStatusService.call(@current_user, params[:month].to_i, params[:year].to_i), status: :ok
   end
 
+  def yearly_summary
+    render json: YearlySummaryService.call(@current_user), status: :ok
+  end
+
   private
 
   def valid_date_params?(month, year)

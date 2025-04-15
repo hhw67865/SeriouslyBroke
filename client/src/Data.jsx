@@ -53,6 +53,11 @@ const Data = ({ session }) => {
       session,
       [summaryMonth, baseApiCalls.expenses.data, baseApiCalls.categories.data],
     ),
+    yearlySummary: useAxiosGet(
+      `/api/yearly_summary`,
+      session,
+      [baseApiCalls.expenses.data, baseApiCalls.paychecks.data],
+    ),
   };
 
   const apiCalls = {
